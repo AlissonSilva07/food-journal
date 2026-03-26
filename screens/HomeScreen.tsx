@@ -1,5 +1,6 @@
+import { IconSymbol } from "@/components/ui/icon-symbol";
 import React from "react";
-import { ScrollView, Text } from "react-native";
+import { Image, Pressable, View } from "react-native";
 import {
   SafeAreaView,
   useSafeAreaInsets,
@@ -10,11 +11,19 @@ export default function HomeScreen() {
 
   return (
     <SafeAreaView className={`flex-1 pt-${insets.top} pb-${insets.bottom}`}>
-      <ScrollView className="flex-1">
-        <Text className="font-bricolageGrotesque text-2xl text-white">
-          HomeScreen
-        </Text>
-      </ScrollView>
+      <View className="w-full p-4 flex flex-row items-center justify-between">
+        <Pressable className="p-2 items-center justify-center bg-surface rounded-full">
+          <IconSymbol name="magnifyingglass" size={24} color={"white"} />
+        </Pressable>
+        <Image
+          source={require("@/assets/images/logo-dark-minimal.png")}
+          className="h-8 w-32"
+          resizeMode="cover"
+        />
+        <Pressable className="p-2 items-center justify-center bg-surface rounded-full">
+          <IconSymbol name="plus" size={24} color={"white"} />
+        </Pressable>
+      </View>
     </SafeAreaView>
   );
 }

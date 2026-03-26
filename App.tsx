@@ -1,11 +1,10 @@
 import {
-    createStaticNavigation,
-    DarkTheme,
-    DefaultTheme,
+  createStaticNavigation,
+  DarkTheme,
+  DefaultTheme,
 } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { useFonts } from "expo-font";
-import { verifyInstallation } from "nativewind";
 import { useColorScheme } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import "./global.css";
@@ -37,7 +36,6 @@ export default function App() {
     Geist: require("./assets/fonts/Geist.ttf"),
   });
 
-  verifyInstallation();
   const scheme = useColorScheme();
   const isDarkTheme = scheme === "dark";
 

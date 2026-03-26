@@ -13,6 +13,9 @@ module.exports = {
         bricolageGrotesque: ["BricolageGrotesque"],
         geist: ["Geist"],
       },
+      colors: {
+        surface: "#141414",
+      },
     },
   },
   plugins: [],
