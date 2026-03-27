@@ -6,6 +6,7 @@ import GalleryScreen from "./GalleryScreen";
 import HomeScreen from "./HomeScreen";
 import MenuScreen from "./MenuScreen";
 import NewMealScreen from "./NewMealScreen";
+import MealCameraScreen from "./MealCameraScreen";
 
 export const HomeStack = createStackNavigator({
   screens: {
@@ -20,12 +21,24 @@ export const HomeStack = createStackNavigator({
   groups: {
     Modal: {
       screenOptions: {
-        title: "Novo",
-        headerShown: false,
         presentation: "modal",
+        headerShown: false
       },
       screens: {
-        NewMeal: NewMealScreen,
+        NewMeal: {
+          screen: NewMealScreen,
+          options: {
+            title: "Novo",
+            headerShown: false,
+          },
+        },
+        MealCamera: {
+          screen: MealCameraScreen,
+          options: {
+            title: "Camera",
+            headerShown: false,
+          },
+        }
       },
     },
   },

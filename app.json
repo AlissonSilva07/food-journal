@@ -39,6 +39,12 @@
           "resizeMode": "contain",
           "backgroundColor": "#000000"
         }
+      ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "$(PRODUCT_NAME) gostaria de acessar câmera"
+        }
       ]
     ],
     "experiments": {

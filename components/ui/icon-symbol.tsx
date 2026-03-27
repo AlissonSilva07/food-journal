@@ -25,10 +25,13 @@ const MAPPING = {
   "magnifyingglass": "search",
   "plus": "add",
   "sun.max": "sunny",
-  "fork.knife": "restaurant",
+  "fork.knife": "local-restaurant",
   "camera.fill": "camera-alt",
   "gear": "settings",
-  "xmark": "close"
+  "xmark": "close",
+  "arrow.right" : "arrow-forward",
+  "exclamationmark.bubble.fill" : "info",
+  "repeat" : "repeat"
 } as IconMapping;
 
 /**

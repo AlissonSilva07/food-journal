@@ -11,13 +11,14 @@ export default function HomeScreen() {
     <MainLayout>
       <View style={styles.container}>
         <View style={styles.header}>
-          <TopBarButton iconName="magnifyingglass" action={() => {}} />
+          <TopBarButton iconName="magnifyingglass" ca action={() => {}} />
           <Image
             source={require("@/assets/images/logo-dark-minimal.png")}
             style={styles.headerImage}
           />
           <TopBarButton
             iconName="plus"
+            actionType="primary"
             action={() => {
               navigation.navigate("Home", {
                 screen: "NewMeal",

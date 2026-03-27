@@ -6,9 +6,9 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { IconSymbol } from "./icon-symbol.ios";
 import AppText from "./text";
 
-type MealEntryType = "BREAKFAST" | "LUNCH" | "SNACK" | "DINNER";
+export type MealEntryType = "BREAKFAST" | "LUNCH" | "SNACK" | "DINNER" | "OTHER";
 
-interface MealEntry {
+export interface MealEntry {
   id: number;
   title: string;
   description?: string;
@@ -19,12 +19,12 @@ interface MealEntry {
   photo_url?: string;
 }
 
-interface MealSection {
+export interface MealSection {
   title: MealEntryType;
   data: MealEntry[];
 }
 
-interface MealSectionTitle {
+export interface MealSectionTitle {
   title: string;
   iconName: SymbolViewProps["name"];
 }
