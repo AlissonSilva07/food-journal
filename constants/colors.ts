@@ -5,4 +5,5 @@ export const appColors = {
   onSurface: "#FFFFFF",
   onInverseBackground: "#707070",
   outline: "#414141",
+  primary: "#CEFF00",
 };
