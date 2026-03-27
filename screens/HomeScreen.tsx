@@ -1,29 +1,52 @@
-import { IconSymbol } from "@/components/ui/icon-symbol";
+import { MainLayout } from "@/components/layout/MainLayout";
+import { HomeSection } from "@/components/ui/home-section";
+import TopBarButton from "@/components/ui/topbar-button";
 import React from "react";
-import { Image, Pressable, View } from "react-native";
-import {
-  SafeAreaView,
-  useSafeAreaInsets,
-} from "react-native-safe-area-context";
+import { Image, StyleSheet, View } from "react-native";
 
 export default function HomeScreen() {
-  const insets = useSafeAreaInsets();
-
   return (
-    <SafeAreaView className={`flex-1 pt-${insets.top} pb-${insets.bottom}`}>
-      <View className="w-full p-4 flex flex-row items-center justify-between">
-        <Pressable className="p-2 items-center justify-center bg-surface rounded-full">
-          <IconSymbol name="magnifyingglass" size={24} color={"white"} />
-        </Pressable>
-        <Image
-          source={require("@/assets/images/logo-dark-minimal.png")}
-          className="h-8 w-32"
-          resizeMode="cover"
-        />
-        <Pressable className="p-2 items-center justify-center bg-surface rounded-full">
-          <IconSymbol name="plus" size={24} color={"white"} />
-        </Pressable>
+    <MainLayout>
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <TopBarButton iconName="magnifyingglass" action={() => {}} />
+          <Image
+            source={require("@/assets/images/logo-dark-minimal.png")}
+            style={styles.headerImage}
+          />
+          <TopBarButton iconName="plus" action={() => {}} />
+        </View>
+        <View style={styles.spacer} />
+        <HomeSection />
       </View>
-    </SafeAreaView>
+    </MainLayout>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  header: {
+    width: "100%",
+    height: 64,
+    paddingHorizontal: 16,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  spacer: {
+    height: 16,
+  },
+  headerImage: {
+    height: 42,
+    width: 200,
+    resizeMode: "contain",
+  },
+  body: {
+    flex: 1,
+    flexDirection: "column",
+    alignItems: "flex-start",
+    paddingHorizontal: 16,
+  },
+});

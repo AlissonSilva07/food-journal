@@ -6,7 +6,7 @@
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "foodjournal",
-    "userInterfaceStyle": "automatic",
+    "userInterfaceStyle": "dark",
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
@@ -30,25 +30,14 @@
     },
     "plugins": [
       "expo-router",
-      [
-        "expo-font",
-        {
-          "fonts": [
-            "./assets/fonts/BricolageGrotesque.ttf",
-            "./assets/fonts/Geist.ttf"
-          ]
-        }
-      ],
+      "expo-font",
       [
         "expo-splash-screen",
         {
           "image": "./assets/images/splash-icon.png",
           "imageWidth": 200,
           "resizeMode": "contain",
-          "backgroundColor": "#ffffff",
-          "dark": {
-            "backgroundColor": "#000000"
-          }
+          "backgroundColor": "#000000"
         }
       ]
     ],

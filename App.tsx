@@ -7,7 +7,6 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { useFonts } from "expo-font";
 import { useColorScheme } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import "./global.css";
 import HomeScreen from "./screens/HomeScreen";
 
 type RootStackType = typeof RootStack;
