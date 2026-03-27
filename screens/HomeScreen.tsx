@@ -1,17 +1,18 @@
 import { MainLayout } from "@/components/layout/MainLayout";
 import { HomeSection } from "@/components/ui/home-section";
 import TopBarButton from "@/components/ui/topbar-button";
-import { useNavigation } from "@react-navigation/native";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
 import React from "react";
 import { Image, StyleSheet, View } from "react-native";
+import { RootTabParamList } from "./Navigator";
 
 export default function HomeScreen() {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<RootTabParamList>>();
   return (
     <MainLayout>
       <View style={styles.container}>
         <View style={styles.header}>
-          <TopBarButton iconName="magnifyingglass" ca action={() => {}} />
+          <TopBarButton iconName="magnifyingglass" action={() => {}} />
           <Image
             source={require("@/assets/images/logo-dark-minimal.png")}
             style={styles.headerImage}
@@ -21,7 +22,7 @@ export default function HomeScreen() {
             actionType="primary"
             action={() => {
               navigation.navigate("Home", {
-                screen: "NewMeal",
+                screen: "New",
               });
             }}
           />

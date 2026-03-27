@@ -7,6 +7,7 @@ import HomeScreen from "./HomeScreen";
 import MenuScreen from "./MenuScreen";
 import NewMealScreen from "./NewMealScreen";
 import MealCameraScreen from "./MealCameraScreen";
+import MealIngredientsScreen from "./MealIngredientsScreen";
 
 export const HomeStack = createStackNavigator({
   screens: {
@@ -25,20 +26,9 @@ export const HomeStack = createStackNavigator({
         headerShown: false
       },
       screens: {
-        NewMeal: {
-          screen: NewMealScreen,
-          options: {
-            title: "Novo",
-            headerShown: false,
-          },
-        },
-        MealCamera: {
-          screen: MealCameraScreen,
-          options: {
-            title: "Camera",
-            headerShown: false,
-          },
-        }
+        New: NewMealScreen,
+        Camera: MealCameraScreen,
+        Ingredients: MealIngredientsScreen
       },
     },
   },
@@ -79,9 +69,22 @@ export const RootStack = createBottomTabNavigator({
 export const Navigation = createStaticNavigation(RootStack);
 
 export type RootStackType = typeof RootStack;
-export type HomeStackType = typeof HomeStack;
+
+export type HomeStackParamList = {
+  Index: undefined;
+  New: undefined;
+  Camera: undefined;
+  Ingredients: undefined;
+};
+
+export type RootTabParamList = {
+  Home: {
+    screen: keyof HomeStackParamList;
+  };
+  Gallery: undefined;
+  Menu: undefined;
+};
 
 declare module "@react-navigation/core" {
   interface RootNavigator extends RootStackType {}
-  interface HomeNavigator extends HomeStackType {}
 }

@@ -3,24 +3,26 @@ import { IconSymbol } from "@/components/ui/icon-symbol";
 import AppText from "@/components/ui/text";
 import TopBarButton from "@/components/ui/topbar-button";
 import { appColors } from "@/constants/colors";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { CameraType, CameraView, useCameraPermissions } from "expo-camera";
 import * as Haptics from "expo-haptics";
-import { useNavigation } from "expo-router";
 import React, { useRef, useState } from "react";
 import {
   ActivityIndicator,
   Dimensions,
   Image,
+  Platform,
   Pressable,
   StyleSheet,
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { RootTabParamList } from "./Navigator";
 
 const screenHeight = Dimensions.get("screen").height;
 
 export default function MealCameraScreen() {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<RootTabParamList>>();
   const insets = useSafeAreaInsets();
   const [facing, setFacing] = useState<CameraType>("back");
   const [permission, requestPermission] = useCameraPermissions();
@@ -60,10 +62,27 @@ export default function MealCameraScreen() {
 
   if (!permission.granted) {
     return (
-      <View style={[styles.container, { paddingTop: insets.top }]}>
+      <View
+        style={[
+          styles.container,
+          {
+            paddingTop: Platform.select({
+              ios: 0,
+              android: insets.top,
+            }),
+          },
+        ]}
+      >
         <View style={styles.header}>
           <TopBarButton iconName="xmark" action={navigation.goBack} />
-          {canProcceed() && <TopBarButton text="Pular" action={() => {}} />}
+          <TopBarButton
+            text="Pular"
+            action={() =>
+              navigation.navigate("Home", {
+                screen: "Ingredients",
+              })
+            }
+          />
         </View>
         <View style={styles.spacer} />
         <View style={styles.notGrantedBody}>
@@ -91,10 +110,27 @@ export default function MealCameraScreen() {
   }
 
   return (
-    <View style={[styles.container, { paddingTop: insets.top }]}>
+    <View
+      style={[
+        styles.container,
+        {
+          paddingTop: Platform.select({
+            ios: 0,
+            android: insets.top,
+          }),
+        },
+      ]}
+    >
       <View style={styles.header}>
         <TopBarButton iconName="xmark" action={navigation.goBack} />
-        {canProcceed() && <TopBarButton text="Pular" action={() => {}} />}
+        <TopBarButton
+          text="Pular"
+          action={() =>
+            navigation.navigate("Home", {
+              screen: "Ingredients",
+            })
+          }
+        />
       </View>
       <View style={styles.spacer} />
       <View style={styles.body}>
@@ -134,7 +170,11 @@ export default function MealCameraScreen() {
         ) : (
           <View style={styles.buttonsContainer}>
             <AppButton title="Escolher foto" />
-            <AppButton title="Tentar novamente" variant="muted" onPress={resetCamera} />
+            <AppButton
+              title="Tentar novamente"
+              variant="muted"
+              onPress={resetCamera}
+            />
           </View>
         )}
       </View>

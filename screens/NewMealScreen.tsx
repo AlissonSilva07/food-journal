@@ -3,10 +3,11 @@ import { MealEntryType } from "@/components/ui/home-section";
 import AppText from "@/components/ui/text";
 import TopBarButton from "@/components/ui/topbar-button";
 import { appColors } from "@/constants/colors";
-import { useNavigation } from "expo-router";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
 import React, { useEffect, useRef, useState } from "react";
 import {
   Keyboard,
+  Platform,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -14,9 +15,10 @@ import {
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { RootTabParamList } from "./Navigator";
 
 export default function NewMealScreen() {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<RootTabParamList>>();
   const insets = useSafeAreaInsets();
   const input1Ref = useRef<TextInput | null>(null);
   const input2Ref = useRef<TextInput | null>(null);
@@ -63,7 +65,7 @@ export default function NewMealScreen() {
   };
 
   const canProcceed = () => {
-    if (title && title.trim() === "") return false;
+    if (!title || title.trim() === "") return false;
     if (!selectedMealType) return false;
     return true;
   };
@@ -73,15 +75,27 @@ export default function NewMealScreen() {
   }, []);
 
   return (
-    <View style={[styles.container, { paddingTop: insets.top }]}>
+    <View
+      style={[
+        styles.container,
+        {
+          paddingTop: Platform.select({
+            ios: 0,
+            android: insets.top,
+          }),
+        },
+      ]}
+    >
       <View style={styles.header}>
         <TopBarButton iconName="xmark" action={navigation.goBack} />
-        {canProcceed() && (
-          <TopBarButton
-            iconName="arrow.right"
-            action={() => navigation.navigate("MealCamera")}
-          />
-        )}
+        {canProcceed() && <TopBarButton
+          iconName="arrow.right"
+          action={() =>
+            navigation.navigate("Home", {
+              screen: "Camera",
+            })
+          }
+        />}
       </View>
       <View style={styles.spacer} />
       <ScrollView style={styles.body} contentContainerStyle={styles.bodyScroll}>
