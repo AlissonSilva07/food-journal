@@ -5,7 +5,7 @@ import { useLinkBuilder } from "@react-navigation/native";
 import { BlurView } from "expo-blur";
 import { Dimensions, StyleSheet, View } from "react-native";
 import { EdgeInsets } from "react-native-safe-area-context";
-import { IconSymbol } from "./icon-symbol.ios";
+import { IconSymbol } from "./icon-symbol";
 
 type AppTabBarProps = BottomTabBarProps & {
   insets: EdgeInsets;

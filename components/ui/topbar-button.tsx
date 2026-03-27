@@ -2,7 +2,7 @@ import { appColors } from "@/constants/colors";
 import { SymbolViewProps } from "expo-symbols";
 import React from "react";
 import { Pressable, StyleSheet } from "react-native";
-import { IconSymbol } from "./icon-symbol.ios";
+import { IconSymbol } from "./icon-symbol";
 
 interface TopBarButtonProps {
   iconName: SymbolViewProps["name"];

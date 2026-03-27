@@ -1,32 +1,24 @@
 import { MainLayout } from "@/components/layout/MainLayout";
-import { HomeSection } from "@/components/ui/home-section";
+import AppText from "@/components/ui/text";
 import TopBarButton from "@/components/ui/topbar-button";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation } from "expo-router";
 import React from "react";
-import { Image, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 
-export default function HomeScreen() {
+export default function NewMealScreen() {
   const navigation = useNavigation();
   return (
     <MainLayout>
       <View style={styles.container}>
         <View style={styles.header}>
-          <TopBarButton iconName="magnifyingglass" action={() => {}} />
-          <Image
-            source={require("@/assets/images/logo-dark-minimal.png")}
-            style={styles.headerImage}
-          />
-          <TopBarButton
-            iconName="plus"
-            action={() => {
-              navigation.navigate("Home", {
-                screen: "NewMeal",
-              });
-            }}
-          />
+          <TopBarButton iconName="xmark" action={navigation.goBack} />
         </View>
         <View style={styles.spacer} />
-        <HomeSection />
+        <View style={styles.body}>
+          <AppText fontFamily="display" fontSize="2xl">
+            Novo
+          </AppText>
+        </View>
       </View>
     </MainLayout>
   );
@@ -42,10 +34,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
   },
   spacer: {
-    height: 16
+    height: 16,
   },
   headerImage: {
     height: 42,

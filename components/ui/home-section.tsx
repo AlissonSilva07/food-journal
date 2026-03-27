@@ -2,6 +2,7 @@ import { appColors } from "@/constants/colors";
 import { SymbolViewProps } from "expo-symbols";
 import React from "react";
 import { Image, SectionList, StyleSheet, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { IconSymbol } from "./icon-symbol.ios";
 import AppText from "./text";
 
@@ -95,6 +96,7 @@ const mealEntries: MealEntry[] = [
 ];
 
 export function HomeSection() {
+  const insets = useSafeAreaInsets();
   const mealOrder: MealEntryType[] = ["BREAKFAST", "LUNCH", "SNACK", "DINNER"];
 
   const initialSections: MealSection[] = mealOrder.map((type) => ({
@@ -210,7 +212,10 @@ export function HomeSection() {
         return null;
       }}
       style={styles.section}
-      contentContainerStyle={styles.sectionScroll}
+      contentContainerStyle={[
+        styles.sectionScroll,
+        { paddingBottom: insets.bottom + 88 },
+      ]}
       showsVerticalScrollIndicator={false}
       stickySectionHeadersEnabled={false}
     />
