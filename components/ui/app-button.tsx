@@ -1,4 +1,4 @@
-import { appColors } from "@/constants/colors";
+import { useThemeColor } from "@/hooks/use-theme-color";
 import React from "react";
 import {
   ActivityIndicator,
@@ -7,7 +7,7 @@ import {
   PressableProps,
   StyleSheet,
 } from "react-native";
-import AppText from "./text";
+import { AppText } from "./app-text";
 
 export type AppButtonVariant = "default" | "muted" | "disabled" | "loading";
 
@@ -27,38 +27,43 @@ export function AppButton({
   variant = "default",
   ...rest
 }: AppButtonProps) {
+  const background = useThemeColor({}, "primary");
+  const foreground = useThemeColor({}, "onPrimary");
+  const surface = useThemeColor({}, "surface");
+  const onSurface = useThemeColor({}, "onSurface");
+
   const getButtonColors = () => {
     let colors: ButtonColors = {};
 
     switch (variant) {
       case "default":
         colors = {
-          bg: appColors.primary,
-          text: appColors.background,
+          bg: background,
+          text: foreground,
         };
         break;
       case "muted":
         colors = {
           bg: "transparent",
-          text: appColors.primary,
+          text: background,
         };
         break;
       case "disabled":
         colors = {
-          bg: appColors.surface,
-          text: appColors.background,
+          bg: surface,
+          text: onSurface,
         };
         break;
       case "loading":
         colors = {
-          bg: appColors.primary,
-          text: appColors.background,
+          bg: background,
+          text: foreground,
         };
         break;
       default:
         colors = {
-          bg: appColors.primary,
-          text: appColors.background,
+          bg: background,
+          text: foreground,
         };
         break;
     }

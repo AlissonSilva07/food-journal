@@ -25,7 +25,7 @@ const MAPPING = {
   "magnifyingglass": "search",
   "plus": "add",
   "sun.max": "sunny",
-  "fork.knife": "local-restaurant",
+  "fork.knife": "restaurant",
   "camera.fill": "camera-alt",
   "gear": "settings",
   "xmark": "close",

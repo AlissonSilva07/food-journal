@@ -1,8 +1,7 @@
-import { appColors } from "@/constants/colors";
+import { useThemeColor } from "@/hooks/use-theme-color";
 import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import { PlatformPressable } from "@react-navigation/elements";
 import { useLinkBuilder } from "@react-navigation/native";
-import { BlurView } from "expo-blur";
 import { Dimensions, StyleSheet, View } from "react-native";
 import { EdgeInsets } from "react-native-safe-area-context";
 import { IconSymbol } from "./icon-symbol";
@@ -20,17 +19,19 @@ export const AppTabBar = ({
   insets,
 }: AppTabBarProps) => {
   const { buildHref } = useLinkBuilder();
+  const surface = useThemeColor({}, "surface");
+  const textSecondary = useThemeColor({}, "textSecondary");
+  const background = useThemeColor({}, "background");
+  const inverseBackground = useThemeColor({}, "inverseBackground");
 
   return (
-    <BlurView
-      intensity={80}
-      tint="light"
-      experimentalBlurMethod="dimezisBlurView"
+    <View
       style={[
         styles.blurView,
         {
           bottom: insets.bottom + 16,
           marginHorizontal: screenWidth / 8,
+          backgroundColor: surface,
         },
       ]}
     >
@@ -47,11 +48,7 @@ export const AppTabBar = ({
                 <IconSymbol
                   name="house.fill"
                   size={24}
-                  color={
-                    isFocused
-                      ? appColors.onBackground
-                      : appColors.onInverseBackground
-                  }
+                  color={isFocused ? background : textSecondary}
                 />
               );
             } else if (label === "Gallery") {
@@ -59,11 +56,7 @@ export const AppTabBar = ({
                 <IconSymbol
                   name="camera.fill"
                   size={24}
-                  color={
-                    isFocused
-                      ? appColors.onBackground
-                      : appColors.onInverseBackground
-                  }
+                  color={isFocused ? background : textSecondary}
                 />
               );
             } else {
@@ -71,11 +64,7 @@ export const AppTabBar = ({
                 <IconSymbol
                   name="gear"
                   size={24}
-                  color={
-                    isFocused
-                      ? appColors.onBackground
-                      : appColors.onInverseBackground
-                  }
+                  color={isFocused ? background : textSecondary}
                 />
               );
             }
@@ -112,7 +101,9 @@ export const AppTabBar = ({
               style={[
                 styles.tabbarItem,
                 {
-                  backgroundColor: isFocused ? "#373737" : "transparent",
+                  backgroundColor: isFocused
+                    ? inverseBackground
+                    : "transparent",
                 },
               ]}
             >
@@ -121,7 +112,7 @@ export const AppTabBar = ({
           );
         })}
       </View>
-    </BlurView>
+    </View>
   );
 };
 
@@ -140,7 +131,6 @@ const styles = StyleSheet.create({
     padding: 4,
     borderRadius: 100,
     gap: 8,
-    backgroundColor: "rgba(0,0,0,0.80)",
   },
   tabbarItem: {
     flex: 1,

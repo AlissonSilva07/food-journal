@@ -1,4 +1,3 @@
-import { appColors } from "@/constants/colors";
 import React from "react";
 import { ColorValue, Text, TextProps } from "react-native";
 
@@ -10,15 +9,21 @@ interface AppTextProps extends TextProps {
   fontColor?: ColorValue;
 }
 
-export default function AppText({
+export function AppText({
   children,
   fontFamily = "body",
-  fontColor = appColors.onBackground,
+  fontColor = "#000000",
   fontSize = "md",
   bold = false,
   ...rest
 }: AppTextProps) {
-  const style = fontFamily === "display" ? "BricolageGrotesque" : "Geist";
+  const getStyle = () => {
+    if (fontFamily === "display") return "BricolageGrotesque";
+    if (fontFamily === "body" && bold === true) return "GeistBold";
+    if (fontFamily === "body" && bold === false) return "GeistRegular";
+
+    return "Geist";
+  };
   const getFontSizeSize = () => {
     switch (fontSize) {
       case "xs":
@@ -41,10 +46,9 @@ export default function AppText({
     <Text
       style={[
         {
-          fontFamily: style,
+          fontFamily: getStyle(),
           fontSize: getFontSizeSize(),
-          color: fontColor,
-          fontWeight: bold ? "700" : undefined,
+          color: fontColor
         },
       ]}
       {...rest}

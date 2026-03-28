@@ -7,7 +7,8 @@ import { Navigation } from "./screens/Navigator";
 export default function App() {
   const [fontsLoaded] = useFonts({
     BricolageGrotesque: require("./assets/fonts/BricolageGrotesque.ttf"),
-    Geist: require("./assets/fonts/Geist.ttf"),
+    GeistRegular: require("./assets/fonts/Geist-Regular.ttf"),
+    GeistBold: require("./assets/fonts/Geist-Bold.ttf"),
   });
 
   const scheme = useColorScheme();

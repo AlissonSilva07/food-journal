@@ -1,12 +1,15 @@
 import { MainLayout } from "@/components/layout/MainLayout";
-import AppText from "@/components/ui/text";
-import TopBarButton from "@/components/ui/topbar-button";
+import { AppText } from "@/components/ui/app-text";
+import { TopBarButton } from "@/components/ui/topbar-button";
+import { useThemeColor } from "@/hooks/use-theme-color";
 import { useNavigation } from "expo-router";
 import React from "react";
 import { StyleSheet, View } from "react-native";
 
 export default function MenuScreen() {
   const navigation = useNavigation();
+  const textPrimary = useThemeColor({}, "text");
+
   return (
     <MainLayout>
       <View style={styles.container}>
@@ -15,7 +18,7 @@ export default function MenuScreen() {
         </View>
         <View style={styles.spacer} />
         <View style={styles.body}>
-          <AppText fontFamily="display" fontSize="2xl">
+          <AppText fontFamily="display" fontSize="2xl" fontColor={textPrimary}>
             Menu
           </AppText>
         </View>

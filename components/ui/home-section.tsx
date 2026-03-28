@@ -1,12 +1,17 @@
-import { appColors } from "@/constants/colors";
+import { useThemeColor } from "@/hooks/use-theme-color";
 import { SymbolViewProps } from "expo-symbols";
 import React from "react";
 import { Image, SectionList, StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { IconSymbol } from "./icon-symbol.ios";
-import AppText from "./text";
+import { IconSymbol } from "./icon-symbol";
+import { AppText } from "./app-text";
 
-export type MealEntryType = "BREAKFAST" | "LUNCH" | "SNACK" | "DINNER" | "OTHER";
+export type MealEntryType =
+  | "BREAKFAST"
+  | "LUNCH"
+  | "SNACK"
+  | "DINNER"
+  | "OTHER";
 
 export interface MealEntry {
   id: number;
@@ -97,6 +102,12 @@ const mealEntries: MealEntry[] = [
 
 export function HomeSection() {
   const insets = useSafeAreaInsets();
+
+  const surface = useThemeColor({}, "surface");
+  const onSurface = useThemeColor({}, "onSurface");
+  const textPrimary = useThemeColor({}, "text");
+  const textSecondary = useThemeColor({}, "textSecondary");
+
   const mealOrder: MealEntryType[] = ["BREAKFAST", "LUNCH", "SNACK", "DINNER"];
 
   const initialSections: MealSection[] = mealOrder.map((type) => ({
@@ -158,7 +169,7 @@ export function HomeSection() {
       sections={sortedSections}
       keyExtractor={(item) => item.id.toString()}
       ListHeaderComponent={() => (
-        <AppText fontFamily="display" fontSize="2xl">
+        <AppText fontFamily="display" fontSize="2xl" fontColor={textPrimary}>
           Hoje
         </AppText>
       )}
@@ -168,42 +179,36 @@ export function HomeSection() {
             <IconSymbol
               name={renderSectionTitle(section.title).iconName}
               size={12}
-              color={appColors.onInverseBackground}
+              color={textSecondary}
             />
-            <AppText fontSize="sm" fontColor={appColors.onInverseBackground}>
+            <AppText fontSize="sm" fontColor={textSecondary}>
               {renderSectionTitle(section.title).title}
             </AppText>
           </View>
         );
       }}
       renderItem={({ item }) => (
-        <View style={styles.itemContainer}>
+        <View style={[styles.itemContainer, { backgroundColor: surface }]}>
           <Image source={{ uri: item.photo_url }} style={styles.image} />
           <View style={styles.textContainer}>
-            <AppText bold>{item.title}</AppText>
+            <AppText bold fontColor={textPrimary}>
+              {item.title}
+            </AppText>
             {item.description && (
-              <AppText fontSize="sm" fontColor={appColors.onInverseBackground}>
+              <AppText fontSize="sm" fontColor={textSecondary}>
                 {item.description}
               </AppText>
             )}
           </View>
-          <IconSymbol
-            name="chevron.right"
-            size={20}
-            color={appColors.onInverseBackground}
-          />
+          <IconSymbol name="chevron.right" size={20} color={textSecondary} />
         </View>
       )}
       renderSectionFooter={({ section }) => {
         if (section.data.length === 0) {
           return (
             <View style={styles.emptyContainer}>
-              <IconSymbol
-                name="fork.knife"
-                size={24}
-                color={appColors.onInverseBackground}
-              />
-              <AppText fontSize="sm" fontColor={appColors.onInverseBackground}>
+              <IconSymbol name="fork.knife" size={24} color={textSecondary} />
+              <AppText fontSize="sm" fontColor={textSecondary}>
                 Nenhum item cadastrado
               </AppText>
             </View>
@@ -240,7 +245,6 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingStart: 8,
     paddingEnd: 16,
-    backgroundColor: appColors.surface,
     flexDirection: "row",
     alignItems: "center",
     gap: 16,

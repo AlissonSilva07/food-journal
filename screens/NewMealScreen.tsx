@@ -1,8 +1,8 @@
 import { AppInput } from "@/components/ui/app-input";
+import { AppText } from "@/components/ui/app-text";
 import { MealEntryType } from "@/components/ui/home-section";
-import AppText from "@/components/ui/text";
-import TopBarButton from "@/components/ui/topbar-button";
-import { appColors } from "@/constants/colors";
+import { TopBarButton } from "@/components/ui/topbar-button";
+import { useThemeColor } from "@/hooks/use-theme-color";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import React, { useEffect, useRef, useState } from "react";
 import {
@@ -22,6 +22,14 @@ export default function NewMealScreen() {
   const insets = useSafeAreaInsets();
   const input1Ref = useRef<TextInput | null>(null);
   const input2Ref = useRef<TextInput | null>(null);
+
+  const primary = useThemeColor({}, "primary");
+  const onPrimary = useThemeColor({}, "onPrimary");
+  const outline = useThemeColor({}, "outline");
+  const textPrimary = useThemeColor({}, "text");
+  const textSecondary = useThemeColor({}, "textSecondary");
+  const background = useThemeColor({}, "background");
+  const inverseBackground = useThemeColor({}, "inverseBackground");
 
   const [title, setTitle] = useState("");
   const [isTitleFocused, setIsTitleFocused] = useState(false);
@@ -83,23 +91,26 @@ export default function NewMealScreen() {
             ios: 0,
             android: insets.top,
           }),
+          backgroundColor: background,
         },
       ]}
     >
       <View style={styles.header}>
         <TopBarButton iconName="xmark" action={navigation.goBack} />
-        {canProcceed() && <TopBarButton
-          iconName="arrow.right"
-          action={() =>
-            navigation.navigate("Home", {
-              screen: "Camera",
-            })
-          }
-        />}
+        {canProcceed() && (
+          <TopBarButton
+            iconName="arrow.right"
+            action={() =>
+              navigation.navigate("Home", {
+                screen: "Camera",
+              })
+            }
+          />
+        )}
       </View>
       <View style={styles.spacer} />
       <ScrollView style={styles.body} contentContainerStyle={styles.bodyScroll}>
-        <AppText fontFamily="display" fontSize="2xl">
+        <AppText fontFamily="display" fontSize="2xl" fontColor={textPrimary}>
           Nova refeição
         </AppText>
         <AppInput
@@ -138,14 +149,9 @@ export default function NewMealScreen() {
         />
         <View style={styles.mealTypeContainer}>
           <AppText
-            fontFamily="body"
             fontSize="md"
             bold
-            fontColor={
-              isMealTypeFocused
-                ? appColors.onBackground
-                : appColors.onInverseBackground
-            }
+            fontColor={isMealTypeFocused ? textPrimary : textSecondary}
           >
             Qual o tipo da sua refeição?
           </AppText>
@@ -159,12 +165,8 @@ export default function NewMealScreen() {
                     styles.mealTypeItem,
                     {
                       borderWidth: 1,
-                      borderColor: isSelected
-                        ? appColors.primary
-                        : appColors.outline,
-                      backgroundColor: isSelected
-                        ? appColors.primary
-                        : appColors.background,
+                      borderColor: isSelected ? primary : outline,
+                      backgroundColor: isSelected ? primary : background,
                     },
                   ]}
                   onPressIn={() => {
@@ -177,9 +179,7 @@ export default function NewMealScreen() {
                   <AppText
                     fontSize="sm"
                     bold
-                    fontColor={
-                      isSelected ? appColors.background : appColors.onBackground
-                    }
+                    fontColor={isSelected ? onPrimary : inverseBackground}
                   >
                     {getMealTypeTitle(mt)}
                   </AppText>

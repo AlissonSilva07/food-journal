@@ -1,8 +1,8 @@
 import { AppButton } from "@/components/ui/app-button";
+import { AppText } from "@/components/ui/app-text";
 import { IconSymbol } from "@/components/ui/icon-symbol";
-import AppText from "@/components/ui/text";
-import TopBarButton from "@/components/ui/topbar-button";
-import { appColors } from "@/constants/colors";
+import { TopBarButton } from "@/components/ui/topbar-button";
+import { useThemeColor } from "@/hooks/use-theme-color";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { CameraType, CameraView, useCameraPermissions } from "expo-camera";
 import * as Haptics from "expo-haptics";
@@ -30,6 +30,14 @@ export default function MealCameraScreen() {
   const [isCameraReady, setIsCameraReady] = useState(false);
   const cameraRef = useRef<CameraView | null>(null);
 
+  const background = useThemeColor({}, "background");
+  const textPrimary = useThemeColor({}, "text");
+  const primary = useThemeColor({}, "primary");
+  const onPrimary = useThemeColor({}, "onPrimary");
+  const inverseBackground = useThemeColor({}, "inverseBackground");
+  const outline = useThemeColor({}, "outline");
+  const cameraButtonRing = useThemeColor({}, "cameraButtonRing");
+
   const takePicture = async () => {
     if (cameraRef.current) {
       const photo = await cameraRef.current.takePictureAsync({
@@ -55,7 +63,7 @@ export default function MealCameraScreen() {
   if (!permission) {
     return (
       <View>
-        <ActivityIndicator color={appColors.primary} />
+        <ActivityIndicator color={primary} />
       </View>
     );
   }
@@ -70,6 +78,7 @@ export default function MealCameraScreen() {
               ios: 0,
               android: insets.top,
             }),
+            backgroundColor: background,
           },
         ]}
       >
@@ -89,14 +98,19 @@ export default function MealCameraScreen() {
           <IconSymbol
             name="exclamationmark.bubble.fill"
             size={42}
-            color={appColors.onBackground}
+            color={inverseBackground}
           />
-          <AppText fontFamily="display" fontSize="2xl">
+          <AppText fontFamily="display" fontSize="2xl" fontColor={textPrimary}>
             Atenção
           </AppText>
-          <AppText>Precisamos da sua permissão para acessar a câmera.</AppText>
-          <Pressable style={styles.button} onPress={requestPermission}>
-            <AppText fontColor={appColors.background} bold>
+          <AppText fontColor={textPrimary}>
+            Precisamos da sua permissão para acessar a câmera.
+          </AppText>
+          <Pressable
+            style={[styles.button, { backgroundColor: primary }]}
+            onPress={requestPermission}
+          >
+            <AppText fontColor={onPrimary} bold>
               Conceder permissão
             </AppText>
           </Pressable>
@@ -118,6 +132,7 @@ export default function MealCameraScreen() {
             ios: 0,
             android: insets.top,
           }),
+          backgroundColor: background,
         },
       ]}
     >
@@ -134,15 +149,25 @@ export default function MealCameraScreen() {
       </View>
       <View style={styles.spacer} />
       <View style={styles.body}>
-        <AppText fontFamily="display" fontSize="2xl">
+        <AppText fontFamily="display" fontSize="2xl" fontColor={textPrimary}>
           Câmera
         </AppText>
         {imageUri ? (
-          <View style={[styles.camera, { height: screenHeight / 2 }]}>
+          <View
+            style={[
+              styles.camera,
+              { height: screenHeight / 2, borderColor: outline },
+            ]}
+          >
             <Image source={{ uri: imageUri }} style={{ flex: 1 }} />
           </View>
         ) : (
-          <View style={[styles.camera, { height: screenHeight / 2 }]}>
+          <View
+            style={[
+              styles.camera,
+              { height: screenHeight / 2, borderColor: outline },
+            ]}
+          >
             <CameraView
               ref={cameraRef}
               style={{
@@ -152,20 +177,26 @@ export default function MealCameraScreen() {
               enableTorch={false}
             />
             <Pressable
-              style={styles.toggleFacingButton}
+              style={[styles.toggleFacingButton, { backgroundColor: primary }]}
               onPress={toggleCameraFacing}
             >
-              <IconSymbol
-                name="repeat"
-                size={24}
-                color={appColors.onSecondary}
-              />
+              <IconSymbol name="repeat" size={24} color={onPrimary} />
             </Pressable>
           </View>
         )}
         {!imageUri ? (
           <View style={styles.buttonsContainer}>
-            <Pressable style={styles.cameraButton} onPress={takePicture} />
+            <Pressable
+              style={[
+                styles.cameraButton,
+                {
+                  backgroundColor: "white",
+                  borderWidth: 8,
+                  borderColor: cameraButtonRing,
+                },
+              ]}
+              onPress={takePicture}
+            />
           </View>
         ) : (
           <View style={styles.buttonsContainer}>
@@ -223,14 +254,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 100,
-    backgroundColor: appColors.primary,
   },
   camera: {
     position: "relative",
     width: "100%",
     borderWidth: 1,
     borderRadius: 16,
-    borderColor: appColors.outline,
     overflow: "hidden",
   },
   toggleFacingButton: {
@@ -242,7 +271,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 100,
-    backgroundColor: appColors.secondary,
   },
   buttonsContainer: {
     width: "100%",
@@ -255,8 +283,5 @@ const styles = StyleSheet.create({
     width: 64,
     height: 64,
     borderRadius: 100,
-    backgroundColor: appColors.onBackground,
-    borderWidth: 8,
-    borderColor: appColors.cameraButtonRing,
   },
 });

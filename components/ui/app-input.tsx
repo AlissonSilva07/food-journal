@@ -1,7 +1,7 @@
-import { appColors } from "@/constants/colors";
+import { useThemeColor } from "@/hooks/use-theme-color";
 import React, { forwardRef } from "react";
 import { StyleSheet, TextInput, TextInputProps, View } from "react-native";
-import AppText from "./text";
+import { AppText } from "./app-text";
 
 interface AppInputProps extends TextInputProps {
   label: string;
@@ -11,15 +11,20 @@ interface AppInputProps extends TextInputProps {
 
 export const AppInput = forwardRef<TextInput, AppInputProps>(
   ({ label, isFocused, hasErrors, ...rest }, ref) => {
+    const textPrimary = useThemeColor({}, "text");
+    const textSecondary = useThemeColor({}, "textSecondary");
+    const error = useThemeColor({}, "error");
+    const primary = useThemeColor({}, "primary");
+
     const getLabelColor = () => {
       if (isFocused) {
         if (hasErrors) {
-          return appColors.error;
+          return error;
         }
-        return appColors.onBackground;
+        return textPrimary;
       }
 
-      return appColors.onInverseBackground;
+      return textSecondary;
     };
 
     return (
@@ -34,8 +39,8 @@ export const AppInput = forwardRef<TextInput, AppInputProps>(
         </AppText>
         <TextInput
           ref={ref}
-          style={styles.input}
-          placeholderTextColor={appColors.onInverseBackground}
+          style={[styles.input, { color: primary }]}
+          placeholderTextColor={textSecondary}
           {...rest}
           autoCapitalize="none"
           autoComplete="off"
@@ -55,6 +60,5 @@ const styles = StyleSheet.create({
     width: "100%",
     fontSize: 24,
     fontFamily: "BricolageGrotesque",
-    color: appColors.primary,
   },
 });

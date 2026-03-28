@@ -1,10 +1,10 @@
-import AppText from "@/components/ui/text";
-import TopBarButton from "@/components/ui/topbar-button";
+import { TopBarButton } from "@/components/ui/topbar-button";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import React from "react";
 import { Platform, StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { RootTabParamList } from "./Navigator";
+import { AppText } from "@/components/ui/app-text";
 
 export default function MealIngredientsScreen() {
   const navigation = useNavigation<NavigationProp<RootTabParamList>>();

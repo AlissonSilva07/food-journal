@@ -1,9 +1,9 @@
-import { appColors } from "@/constants/colors";
+import { useThemeColor } from "@/hooks/use-theme-color";
 import { SymbolViewProps } from "expo-symbols";
 import React from "react";
 import { Pressable, StyleSheet } from "react-native";
+import { AppText } from "./app-text";
 import { IconSymbol } from "./icon-symbol";
-import AppText from "./text";
 
 interface TopBarButtonProps {
   iconName?: SymbolViewProps["name"];
@@ -12,31 +12,44 @@ interface TopBarButtonProps {
   action: () => void;
 }
 
-export default function TopBarButton({
+export function TopBarButton({
   iconName,
   action,
   text,
   actionType = "secondary",
 }: TopBarButtonProps) {
+  const background = useThemeColor({}, "primary");
+  const foreground = useThemeColor({}, "onPrimary");
+  const surface = useThemeColor({}, "surface");
+  const onSurface = useThemeColor({}, "onSurface");
+
   return (
     <Pressable
       style={[
         styles.container,
         {
           backgroundColor:
-            actionType === "primary" ? appColors.primary : appColors.surface,
+            actionType === "primary" ? background : surface,
         },
       ]}
       onPress={action}
     >
-      {iconName && <IconSymbol
-        name={iconName}
-        size={24}
-        color={
-          actionType === "primary" ? appColors.background : appColors.onSurface
-        }
-      />}
-      {text && <AppText bold fontColor={appColors.onSurface}>{text}</AppText>}
+      {iconName && (
+        <IconSymbol
+          name={iconName}
+          size={24}
+          color={
+            actionType === "primary"
+              ? foreground
+              : onSurface
+          }
+        />
+      )}
+      {text && (
+        <AppText bold fontColor={onSurface}>
+          {text}
+        </AppText>
+      )}
     </Pressable>
   );
 }
