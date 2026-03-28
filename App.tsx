@@ -1,6 +1,4 @@
-import { DarkTheme, DefaultTheme } from "@react-navigation/native";
 import { useFonts } from "expo-font";
-import { useColorScheme } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Navigation } from "./screens/Navigator";
 
@@ -11,14 +9,11 @@ export default function App() {
     GeistBold: require("./assets/fonts/Geist-Bold.ttf"),
   });
 
-  const scheme = useColorScheme();
-  const isDarkTheme = scheme === "dark";
-
   if (!fontsLoaded) return null;
 
   return (
     <SafeAreaProvider className="flex-1">
-      <Navigation theme={isDarkTheme ? DarkTheme : DefaultTheme} />
+      <Navigation />
     </SafeAreaProvider>
   );
 }
