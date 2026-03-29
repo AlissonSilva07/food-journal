@@ -5,6 +5,9 @@ import { Image, SectionList, StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { IconSymbol } from "./icon-symbol";
 import { AppText } from "./app-text";
+import {
+  MealWithIngredients,
+} from "@/core/db/schema";
 
 export type MealEntryType =
   | "BREAKFAST"
@@ -26,7 +29,7 @@ export interface MealEntry {
 
 export interface MealSection {
   title: MealEntryType;
-  data: MealEntry[];
+  data: MealWithIngredients[];
 }
 
 export interface MealSectionTitle {
@@ -34,73 +37,14 @@ export interface MealSectionTitle {
   iconName: SymbolViewProps["name"];
 }
 
-const mealEntries: MealEntry[] = [
-  {
-    id: 1,
-    title: "Avocado Sourdough Toast",
-    description:
-      "Toasted sourdough topped with mashed avocado and chili flakes.",
-    ingredients: ["Sourdough bread", "Avocado", "Chili flakes", "Lemon juice"],
-    meal_type: "BREAKFAST",
-    score: 5,
-    timestamp: new Date("2026-03-27T08:00:00"),
-    photo_url: "https://picsum.photos/seed/avocado/400",
-  },
-  {
-    id: 2,
-    title: "Mediterranean Quinoa Bowl",
-    description: "Fresh quinoa salad with cucumber and feta.",
-    ingredients: [
-      "Quinoa",
-      "Cucumber",
-      "Cherry tomatoes",
-      "Feta cheese",
-      "Olive oil",
-    ],
-    meal_type: "LUNCH",
-    score: 4,
-    timestamp: new Date("2026-03-27T12:30:00"),
-    photo_url: "https://picsum.photos/seed/quinoa/400",
-  },
-  {
-    id: 3,
-    title: "Post-Workout Shake",
-    description: "Whey protein with oat milk and half a banana.",
-    ingredients: ["Whey protein", "Oat milk", "Banana"],
-    meal_type: "SNACK",
-    score: 4,
-    timestamp: new Date("2026-03-27T15:00:00"),
-    photo_url: "https://picsum.photos/seed/shake/400",
-  },
-  {
-    id: 5,
-    title: "Greek Yogurt & Honey",
-    description: "Thick Greek yogurt with honey and crushed walnuts.",
-    ingredients: ["Greek yogurt", "Honey", "Walnuts"],
-    meal_type: "SNACK",
-    score: 4,
-    timestamp: new Date("2026-03-27T10:30:00"),
-    photo_url: "https://picsum.photos/seed/yogurt/400",
-  },
-  {
-    id: 6,
-    title: "Chicken Ginger Stir Fry",
-    description: "Quick stir-fry with bell peppers and soy ginger sauce.",
-    ingredients: [
-      "Chicken breast",
-      "Bell peppers",
-      "Soy sauce",
-      "Ginger",
-      "Sesame oil",
-    ],
-    meal_type: "LUNCH",
-    score: 4,
-    timestamp: new Date("2026-03-26T13:00:00"),
-    photo_url: "https://picsum.photos/seed/stirfry/400",
-  },
-];
+interface HomeSectionProps {
+  meals: MealWithIngredients[]
+}
 
-export function HomeSection() {
+
+export function HomeSection({
+  meals
+}: HomeSectionProps) {
   const insets = useSafeAreaInsets();
 
   const surface = useThemeColor({}, "surface");
@@ -115,8 +59,8 @@ export function HomeSection() {
     data: [],
   }));
 
-  const sortedSections = mealEntries.reduce<MealSection[]>((acc, item) => {
-    const section = acc.find((sec) => sec.title === item.meal_type);
+  const sortedSections = meals.reduce<MealSection[]>((acc, item) => {
+    const section = acc.find((sec) => sec.title === item.mealType);
 
     if (section) {
       section.data.push(item);
@@ -189,7 +133,7 @@ export function HomeSection() {
       }}
       renderItem={({ item }) => (
         <View style={[styles.itemContainer, { backgroundColor: surface }]}>
-          <Image source={{ uri: item.photo_url }} style={styles.image} />
+          <Image source={{ uri: item.imageUri! }} style={styles.image} />
           <View style={styles.textContainer}>
             <AppText bold fontColor={textPrimary}>
               {item.title}

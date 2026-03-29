@@ -30,6 +30,7 @@ export default function NewMealScreen() {
     imageUri,
     inputText,
     ingredients,
+    saveMeal,
   } = useNewMeal();
 
   const goToNextPage = () => {
@@ -50,6 +51,11 @@ export default function NewMealScreen() {
     if (validation === true) {
       goToNextPage();
     }
+  };
+
+  const saveAndGoBack = async () => {
+    await saveMeal();
+    navigation.goBack();
   };
 
   const renderTopBar = () => {
@@ -90,7 +96,7 @@ export default function NewMealScreen() {
             trailing={{
               text: "Salvar",
               actionType: "primary",
-              action: goToNextPage,
+              action: saveAndGoBack,
             }}
           />
         );

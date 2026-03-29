@@ -6,6 +6,7 @@ import { useAssets } from "expo-asset";
 import React from "react";
 import { Image, StyleSheet, useColorScheme, View } from "react-native";
 import { RootTabParamList } from "./Navigator";
+import { useHome } from "@/features/home/hooks/useHome";
 
 export default function HomeScreen() {
   const colorScheme = useColorScheme();
@@ -15,6 +16,8 @@ export default function HomeScreen() {
     require("../assets/images/logo-light-minimal.png"),
     require("../assets/images/logo-dark-minimal.png"),
   ]);
+
+  const { mealsList } = useHome();
 
   const renderAsset = () => {
     if (assets && assets.length > 0) {
@@ -50,7 +53,7 @@ export default function HomeScreen() {
           }}
         />
         <View style={styles.spacer} />
-        <HomeSection />
+        <HomeSection meals={mealsList} />
       </View>
     </MainLayout>
   );

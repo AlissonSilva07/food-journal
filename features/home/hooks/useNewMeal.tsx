@@ -1,7 +1,10 @@
 import { MealEntryType } from "@/core/components/ui/home-section";
+import { useMealStore } from "@/core/store/meals.store";
 import { useCallback, useState } from "react";
 
 export function useNewMeal() {
+  const { addMeal } = useMealStore();
+
   // MEAL INFO
   const [title, setTitle] = useState("");
   const [titleError, setTitleError] = useState<string | null>(null);
@@ -85,6 +88,24 @@ export function useNewMeal() {
   const removeFromList = (ingredient: string) =>
     setIngredients((prev) => prev.filter((i) => i !== ingredient));
 
+  const saveMeal = async () => {
+    const result = await addMeal(
+      {
+        title,
+        description,
+        mealType: selectedMealType!,
+        imageUri: imageUri ?? undefined,
+      },
+      ingredients,
+    );
+
+    if (result.success) {
+      console.log("Meal saved successfully!");
+    }
+
+    return result;
+  };
+
   return {
     title: {
       value: title,
@@ -125,5 +146,6 @@ export function useNewMeal() {
       remove: (ingredient: string) => removeFromList(ingredient),
       checkDuplicate: (ingredient: string) => checkDuplicate(ingredient),
     },
+    saveMeal
   };
 }

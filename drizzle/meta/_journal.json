@@ -1,0 +1,27 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1774756493962,
+      "tag": "0000_yummy_deadpool",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1774757329496,
+      "tag": "0001_curly_avengers",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1774759441356,
+      "tag": "0002_perfect_purple_man",
+      "breakpoints": true
+    }
+  ]
+}

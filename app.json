@@ -45,7 +45,8 @@
         {
           "cameraPermission": "$(PRODUCT_NAME) gostaria de acessar câmera"
         }
-      ]
+      ],
+      "expo-sqlite"
     ],
     "experiments": {
       "typedRoutes": true,
