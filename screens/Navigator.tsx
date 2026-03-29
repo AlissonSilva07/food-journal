@@ -1,4 +1,4 @@
-import { AppTabBar } from "@/components/ui/app-tabbar";
+import { AppTabBar } from "@/core/components/ui/app-tabbar";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStaticNavigation } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -6,8 +6,6 @@ import GalleryScreen from "./GalleryScreen";
 import HomeScreen from "./HomeScreen";
 import MenuScreen from "./MenuScreen";
 import NewMealScreen from "./NewMealScreen";
-import MealCameraScreen from "./MealCameraScreen";
-import MealIngredientsScreen from "./MealIngredientsScreen";
 
 export const HomeStack = createStackNavigator({
   screens: {
@@ -26,9 +24,7 @@ export const HomeStack = createStackNavigator({
         headerShown: false
       },
       screens: {
-        New: NewMealScreen,
-        Camera: MealCameraScreen,
-        Ingredients: MealIngredientsScreen
+        New: NewMealScreen
       },
     },
   },

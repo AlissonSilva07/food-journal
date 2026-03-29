@@ -1,4 +1,4 @@
-import { useThemeColor } from "@/hooks/use-theme-color";
+import { useThemeColor } from "@/core/hooks/use-theme-color";
 import { SymbolViewProps } from "expo-symbols";
 import React from "react";
 import { Image, SectionList, StyleSheet, View } from "react-native";

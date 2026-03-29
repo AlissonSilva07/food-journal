@@ -1,9 +1,7 @@
-import { AppButton } from "@/components/ui/app-button";
-import { AppText } from "@/components/ui/app-text";
-import { IconSymbol } from "@/components/ui/icon-symbol";
-import { TopBarButton } from "@/components/ui/topbar-button";
-import { useThemeColor } from "@/hooks/use-theme-color";
-import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { AppButton } from "@/core/components/ui/app-button";
+import { AppText } from "@/core/components/ui/app-text";
+import { IconSymbol } from "@/core/components/ui/icon-symbol";
+import { useThemeColor } from "@/core/hooks/use-theme-color";
 import { CameraType, CameraView, useCameraPermissions } from "expo-camera";
 import * as Haptics from "expo-haptics";
 import React, { useRef, useState } from "react";
@@ -11,23 +9,29 @@ import {
   ActivityIndicator,
   Dimensions,
   Image,
-  Platform,
   Pressable,
   StyleSheet,
   View,
 } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { RootTabParamList } from "./Navigator";
+
+interface MealInfoTabProps {
+  key: number;
+  imageUri: {
+    value: string | null;
+    setValue: React.Dispatch<React.SetStateAction<string | null>>;
+  };
+  onContinue: () => void;
+}
 
 const screenHeight = Dimensions.get("screen").height;
 
-export default function MealCameraScreen() {
-  const navigation = useNavigation<NavigationProp<RootTabParamList>>();
-  const insets = useSafeAreaInsets();
+export default function MealCameraTab({
+  key,
+  imageUri,
+  onContinue,
+}: MealInfoTabProps) {
   const [facing, setFacing] = useState<CameraType>("back");
   const [permission, requestPermission] = useCameraPermissions();
-  const [imageUri, setImageUri] = useState<string | null>(null);
-  const [isCameraReady, setIsCameraReady] = useState(false);
   const cameraRef = useRef<CameraView | null>(null);
 
   const background = useThemeColor({}, "background");
@@ -46,23 +50,33 @@ export default function MealCameraScreen() {
         skipProcessing: false,
       });
       cameraRef.current.pausePreview();
-      setImageUri(photo.uri);
+      imageUri.setValue(photo.uri);
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     }
   };
 
   const resetCamera = () => {
-    setImageUri(null);
+    imageUri.setValue(null);
     cameraRef.current?.resumePreview();
   };
 
-  const canProcceed = () => {
-    return true;
+  const pickImage = (uri: string) => {
+    if (!uri) return;
+    imageUri.setValue(uri);
+    onContinue();
   };
 
   if (!permission) {
     return (
-      <View>
+      <View
+        style={[
+          styles.container,
+          {
+            backgroundColor: background,
+          },
+        ]}
+        key={key}
+      >
         <ActivityIndicator color={primary} />
       </View>
     );
@@ -74,26 +88,11 @@ export default function MealCameraScreen() {
         style={[
           styles.container,
           {
-            paddingTop: Platform.select({
-              ios: 0,
-              android: insets.top,
-            }),
             backgroundColor: background,
           },
         ]}
+        key={key}
       >
-        <View style={styles.header}>
-          <TopBarButton iconName="xmark" action={navigation.goBack} />
-          <TopBarButton
-            text="Pular"
-            action={() =>
-              navigation.navigate("Home", {
-                screen: "Ingredients",
-              })
-            }
-          />
-        </View>
-        <View style={styles.spacer} />
         <View style={styles.notGrantedBody}>
           <IconSymbol
             name="exclamationmark.bubble.fill"
@@ -128,38 +127,23 @@ export default function MealCameraScreen() {
       style={[
         styles.container,
         {
-          paddingTop: Platform.select({
-            ios: 0,
-            android: insets.top,
-          }),
           backgroundColor: background,
         },
       ]}
+      key={key}
     >
-      <View style={styles.header}>
-        <TopBarButton iconName="xmark" action={navigation.goBack} />
-        <TopBarButton
-          text="Pular"
-          action={() =>
-            navigation.navigate("Home", {
-              screen: "Ingredients",
-            })
-          }
-        />
-      </View>
-      <View style={styles.spacer} />
       <View style={styles.body}>
         <AppText fontFamily="display" fontSize="2xl" fontColor={textPrimary}>
           Câmera
         </AppText>
-        {imageUri ? (
+        {imageUri.value ? (
           <View
             style={[
               styles.camera,
               { height: screenHeight / 2, borderColor: outline },
             ]}
           >
-            <Image source={{ uri: imageUri }} style={{ flex: 1 }} />
+            <Image source={{ uri: imageUri.value }} style={{ flex: 1 }} />
           </View>
         ) : (
           <View
@@ -184,7 +168,7 @@ export default function MealCameraScreen() {
             </Pressable>
           </View>
         )}
-        {!imageUri ? (
+        {!imageUri.value ? (
           <View style={styles.buttonsContainer}>
             <Pressable
               style={[
@@ -200,7 +184,10 @@ export default function MealCameraScreen() {
           </View>
         ) : (
           <View style={styles.buttonsContainer}>
-            <AppButton title="Escolher foto" />
+            <AppButton
+              title="Escolher foto"
+              onPress={() => pickImage(imageUri.value!)}
+            />
             <AppButton
               title="Tentar novamente"
               variant="muted"
@@ -224,9 +211,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-  },
-  spacer: {
-    height: 16,
   },
   headerImage: {
     height: 42,

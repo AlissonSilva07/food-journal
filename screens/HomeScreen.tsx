@@ -1,6 +1,6 @@
-import { MainLayout } from "@/components/layout/MainLayout";
-import { HomeSection } from "@/components/ui/home-section";
-import { TopBarButton } from "@/components/ui/topbar-button";
+import { MainLayout } from "@/core/components/layout/MainLayout";
+import AppTopBar from "@/core/components/ui/app-top-bar";
+import { HomeSection } from "@/core/components/ui/home-section";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { useAssets } from "expo-asset";
 import React from "react";
@@ -33,19 +33,22 @@ export default function HomeScreen() {
   return (
     <MainLayout>
       <View style={styles.container}>
-        <View style={styles.header}>
-          <TopBarButton iconName="magnifyingglass" action={() => {}} />
-          {renderAsset()}
-          <TopBarButton
-            iconName="plus"
-            actionType="primary"
-            action={() => {
+        <AppTopBar
+          leading={{
+            iconName: "magnifyingglass",
+            action: () => {},
+          }}
+          center={renderAsset()}
+          trailing={{
+            iconName: "plus",
+            actionType: "primary",
+            action: () => {
               navigation.navigate("Home", {
                 screen: "New",
               });
-            }}
-          />
-        </View>
+            },
+          }}
+        />
         <View style={styles.spacer} />
         <HomeSection />
       </View>

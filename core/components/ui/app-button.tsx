@@ -1,4 +1,4 @@
-import { useThemeColor } from "@/hooks/use-theme-color";
+import { useThemeColor } from "@/core/hooks/use-theme-color";
 import React from "react";
 import {
   ActivityIndicator,

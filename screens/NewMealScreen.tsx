@@ -1,195 +1,143 @@
-import { AppInput } from "@/components/ui/app-input";
-import { AppText } from "@/components/ui/app-text";
-import { MealEntryType } from "@/components/ui/home-section";
-import { TopBarButton } from "@/components/ui/topbar-button";
-import { useThemeColor } from "@/hooks/use-theme-color";
-import { NavigationProp, useNavigation } from "@react-navigation/native";
-import React, { useEffect, useRef, useState } from "react";
-import {
-  Keyboard,
-  Platform,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  TextInput,
-  View,
-} from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { MainLayout } from "@/core/components/layout/MainLayout";
+import AppTopBar from "@/core/components/ui/app-top-bar";
+import { useThemeColor } from "@/core/hooks/use-theme-color";
+import MealCameraTab from "@/features/home/components/MealCameraTab";
+import MealInfoTab from "@/features/home/components/MealInfoTab";
+import MealIngredientsTab from "@/features/home/components/MealIngredientsScreen";
+import { useNewMeal } from "@/features/home/hooks/useNewMeal";
+import { NavigationProp } from "@react-navigation/native";
+import { useNavigation } from "expo-router";
+import React from "react";
+import { StyleSheet, View } from "react-native";
+import { usePagerView } from "react-native-pager-view";
 import { RootTabParamList } from "./Navigator";
 
 export default function NewMealScreen() {
   const navigation = useNavigation<NavigationProp<RootTabParamList>>();
-  const insets = useSafeAreaInsets();
-  const input1Ref = useRef<TextInput | null>(null);
-  const input2Ref = useRef<TextInput | null>(null);
-
-  const primary = useThemeColor({}, "primary");
-  const onPrimary = useThemeColor({}, "onPrimary");
-  const outline = useThemeColor({}, "outline");
   const textPrimary = useThemeColor({}, "text");
-  const textSecondary = useThemeColor({}, "textSecondary");
-  const background = useThemeColor({}, "background");
-  const inverseBackground = useThemeColor({}, "inverseBackground");
 
-  const [title, setTitle] = useState("");
-  const [isTitleFocused, setIsTitleFocused] = useState(false);
+  const { AnimatedPagerView, ref, activePage, setPage, onPageSelected } =
+    usePagerView({
+      pagesAmount: 3,
+    });
 
-  const [description, setDescription] = useState("");
-  const [isDescriptionFocused, setIsDescriptionFocused] = useState(false);
+  const {
+    title,
+    description,
+    mealtype,
+    getMealTypeTitle,
+    validateMealInfo,
+    imageUri,
+    inputText,
+    ingredients,
+  } = useNewMeal();
 
-  const mealtypes: MealEntryType[] = [
-    "BREAKFAST",
-    "LUNCH",
-    "SNACK",
-    "DINNER",
-    "OTHER",
-  ];
-  const [selectedMealType, setSelectedMealType] =
-    useState<MealEntryType | null>(null);
-  const [isMealTypeFocused, setIsMealTypeFocused] = useState(false);
-
-  const getMealTypeTitle = (type: MealEntryType) => {
-    let mealSection: string;
-
-    switch (type) {
-      case "BREAKFAST":
-        mealSection = "CAFÉ DA MANHÃ";
-        break;
-      case "LUNCH":
-        mealSection = "ALMOÇO";
-        break;
-      case "DINNER":
-        mealSection = "JANTAR";
-        break;
-      case "SNACK":
-        mealSection = "LANCHE";
-        break;
-      default:
-        mealSection = "OUTRO";
-        break;
+  const goToNextPage = () => {
+    if (activePage < 2) {
+      setPage(activePage + 1);
     }
-
-    return mealSection;
   };
 
-  const canProcceed = () => {
-    if (!title || title.trim() === "") return false;
-    if (!selectedMealType) return false;
-    return true;
+  const goToPreviousPage = () => {
+    if (activePage > 0) {
+      setPage(activePage - 1);
+    }
   };
 
-  useEffect(() => {
-    input1Ref.current?.focus();
-  }, []);
+  const proceedToCamera = () => {
+    const validation = validateMealInfo();
+
+    if (validation === true) {
+      goToNextPage();
+    }
+  };
+
+  const renderTopBar = () => {
+    switch (activePage) {
+      case 0:
+        return (
+          <AppTopBar
+            leading={{
+              iconName: "xmark",
+              action: navigation.goBack,
+            }}
+            trailing={{
+              text: "Próximo",
+              action: proceedToCamera,
+            }}
+          />
+        );
+      case 1:
+        return (
+          <AppTopBar
+            leading={{
+              iconName: "arrow.backward",
+              action: goToPreviousPage,
+            }}
+            trailing={{
+              text: "Pular",
+              action: goToNextPage,
+            }}
+          />
+        );
+      case 2:
+        return (
+          <AppTopBar
+            leading={{
+              iconName: "arrow.backward",
+              action: goToPreviousPage,
+            }}
+            trailing={{
+              text: "Salvar",
+              actionType: "primary",
+              action: goToNextPage,
+            }}
+          />
+        );
+      default:
+        return (
+          <AppTopBar
+            leading={{
+              iconName: "xmark",
+              action: () => navigation.goBack,
+            }}
+          />
+        );
+    }
+  };
 
   return (
-    <View
-      style={[
-        styles.container,
-        {
-          paddingTop: Platform.select({
-            ios: 0,
-            android: insets.top,
-          }),
-          backgroundColor: background,
-        },
-      ]}
-    >
-      <View style={styles.header}>
-        <TopBarButton iconName="xmark" action={navigation.goBack} />
-        {canProcceed() && (
-          <TopBarButton
-            iconName="arrow.right"
-            action={() =>
-              navigation.navigate("Home", {
-                screen: "Camera",
-              })
-            }
+    <MainLayout>
+      <View style={styles.container}>
+        {renderTopBar()}
+        <View style={styles.spacer} />
+        <AnimatedPagerView
+          ref={ref}
+          style={styles.pagerView}
+          initialPage={0}
+          scrollEnabled={false}
+          onPageSelected={onPageSelected}
+        >
+          <MealInfoTab
+            key={0}
+            title={title}
+            description={description}
+            mealtype={mealtype}
+            getMealTypeTitle={getMealTypeTitle}
           />
-        )}
+          <MealCameraTab
+            key={1}
+            imageUri={imageUri}
+            onContinue={goToNextPage}
+          />
+          <MealIngredientsTab
+            key={2}
+            inputText={inputText}
+            ingredients={ingredients}
+          />
+        </AnimatedPagerView>
       </View>
-      <View style={styles.spacer} />
-      <ScrollView style={styles.body} contentContainerStyle={styles.bodyScroll}>
-        <AppText fontFamily="display" fontSize="2xl" fontColor={textPrimary}>
-          Nova refeição
-        </AppText>
-        <AppInput
-          ref={input1Ref}
-          label={"Qual o nome da sua refeição?"}
-          value={title}
-          onChangeText={(value: string) => setTitle(value)}
-          placeholder="Ex: Café da manhã reforçado"
-          isFocused={isTitleFocused}
-          onFocus={() => setIsTitleFocused(true)}
-          onBlur={() => setIsTitleFocused(false)}
-          onEndEditing={() => {
-            setIsDescriptionFocused(false);
-            input2Ref.current?.focus();
-          }}
-          returnKeyType="next"
-          hasErrors={false}
-        />
-        <AppInput
-          ref={input2Ref}
-          label={"Adicione uma descrição (opcional)"}
-          value={description}
-          onChangeText={(value: string) => setDescription(value)}
-          placeholder="Ex: Parte da rotina 02"
-          isFocused={isDescriptionFocused}
-          onFocus={() => setIsDescriptionFocused(true)}
-          onBlur={() => setIsDescriptionFocused(false)}
-          onEndEditing={() => {
-            setIsDescriptionFocused(false);
-            input2Ref.current?.blur();
-            setIsMealTypeFocused(true);
-            Keyboard.dismiss();
-          }}
-          returnKeyType="next"
-          hasErrors={false}
-        />
-        <View style={styles.mealTypeContainer}>
-          <AppText
-            fontSize="md"
-            bold
-            fontColor={isMealTypeFocused ? textPrimary : textSecondary}
-          >
-            Qual o tipo da sua refeição?
-          </AppText>
-          <View style={styles.mealTypeRow}>
-            {mealtypes.map((mt) => {
-              const isSelected = mt === selectedMealType;
-              return (
-                <Pressable
-                  key={mt}
-                  style={[
-                    styles.mealTypeItem,
-                    {
-                      borderWidth: 1,
-                      borderColor: isSelected ? primary : outline,
-                      backgroundColor: isSelected ? primary : background,
-                    },
-                  ]}
-                  onPressIn={() => {
-                    Keyboard.dismiss();
-                    input1Ref.current?.blur();
-                    input2Ref.current?.blur();
-                    setSelectedMealType(mt);
-                  }}
-                >
-                  <AppText
-                    fontSize="sm"
-                    bold
-                    fontColor={isSelected ? onPrimary : inverseBackground}
-                  >
-                    {getMealTypeTitle(mt)}
-                  </AppText>
-                </Pressable>
-              );
-            })}
-          </View>
-        </View>
-      </ScrollView>
-    </View>
+    </MainLayout>
   );
 }
 
@@ -203,7 +151,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
   },
   spacer: {
     height: 16,
@@ -213,31 +160,7 @@ const styles = StyleSheet.create({
     width: 200,
     resizeMode: "contain",
   },
-  body: {
+  pagerView: {
     flex: 1,
-  },
-  bodyScroll: {
-    flexDirection: "column",
-    alignItems: "flex-start",
-    paddingHorizontal: 16,
-    gap: 16,
-  },
-  mealTypeContainer: {
-    flexDirection: "column",
-    gap: 16,
-  },
-  mealTypeRow: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: 8,
-  },
-  mealTypeItem: {
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    flexDirection: "row",
-    gap: 8,
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: 100,
   },
 });

@@ -1,7 +1,7 @@
-import { MainLayout } from "@/components/layout/MainLayout";
-import { AppText } from "@/components/ui/app-text";
-import { TopBarButton } from "@/components/ui/topbar-button";
-import { useThemeColor } from "@/hooks/use-theme-color";
+import { MainLayout } from "@/core/components/layout/MainLayout";
+import { AppText } from "@/core/components/ui/app-text";
+import AppTopBar from "@/core/components/ui/app-top-bar";
+import { useThemeColor } from "@/core/hooks/use-theme-color";
 import React from "react";
 import { StyleSheet, View } from "react-native";
 
@@ -10,10 +10,16 @@ export default function GalleryScreen() {
   return (
     <MainLayout>
       <View style={styles.container}>
-        <View style={styles.header}>
-          <TopBarButton iconName="arrow.backward" action={() => {}} />
-          <TopBarButton iconName="magnifyingglass" action={() => {}} />
-        </View>
+        <AppTopBar
+          leading={{
+            iconName: "arrow.backward",
+            action: () => {},
+          }}
+          trailing={{
+            iconName: "magnifyingglass",
+            action: () => {},
+          }}
+        />
         <View style={styles.spacer} />
         <View style={styles.body}>
           <AppText fontFamily="display" fontSize="2xl" fontColor={textPrimary}>

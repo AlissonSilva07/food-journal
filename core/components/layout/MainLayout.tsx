@@ -1,4 +1,4 @@
-import { useThemeColor } from "@/hooks/use-theme-color";
+import { useThemeColor } from "@/core/hooks/use-theme-color";
 import { StatusBar } from "expo-status-bar";
 import React, { ReactNode } from "react";
 import { StyleSheet, useColorScheme } from "react-native";

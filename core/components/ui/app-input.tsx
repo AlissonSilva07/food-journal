@@ -1,4 +1,4 @@
-import { useThemeColor } from "@/hooks/use-theme-color";
+import { useThemeColor } from "@/core/hooks/use-theme-color";
 import React, { forwardRef } from "react";
 import { StyleSheet, TextInput, TextInputProps, View } from "react-native";
 import { AppText } from "./app-text";
