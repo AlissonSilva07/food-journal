@@ -1,8 +1,9 @@
 import { db } from "@/core/db/client";
 import { useMigrations } from "drizzle-orm/expo-sqlite/migrator";
 import { useFonts } from "expo-font";
-import { ActivityIndicator, Text, View } from "react-native";
+import { ActivityIndicator } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import { AppToast } from "./core/components/ui/app-toast";
 import migrations from "./drizzle/migrations";
 import { Navigation } from "./screens/Navigator";
 
@@ -34,6 +35,7 @@ export default function App() {
     <DatabaseProvider>
       <SafeAreaProvider className="flex-1">
         <Navigation />
+        <AppToast />
       </SafeAreaProvider>
     </DatabaseProvider>
   );

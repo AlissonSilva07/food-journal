@@ -1,8 +1,10 @@
-import { MealEntryType } from "@/features/home/components/HomeSection";
 import { useMealStore } from "@/core/store/meals.store";
 import { useCallback, useState } from "react";
+import { MealEntryType } from "../types/meal.types";
+import { useToastStore } from "@/core/store/toast.store";
 
 export function useNewMeal() {
+  const showToast = useToastStore((state) => state.showToast);
   const { addMeal } = useMealStore();
 
   // MEAL INFO
@@ -100,7 +102,15 @@ export function useNewMeal() {
     );
 
     if (result.success) {
-      console.log("Meal saved successfully!");
+      showToast({
+        message: "Salvo com sucesso!",
+        type: "success"
+      })
+    } else {
+      showToast({
+        message: "Erro ao salvar",
+        type: "error"
+      })
     }
 
     return result;

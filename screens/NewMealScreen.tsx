@@ -57,7 +57,9 @@ export default function NewMealScreen() {
 
   const saveAndGoBack = async () => {
     await saveMeal();
-    navigation.goBack();
+    setTimeout(() => {
+      navigation.goBack();
+    }, 500);
   };
 
   const renderTopBar = () => {

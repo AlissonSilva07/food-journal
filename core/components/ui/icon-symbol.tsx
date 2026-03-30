@@ -33,6 +33,9 @@ const MAPPING = {
   "exclamationmark.bubble.fill" : "info",
   "repeat" : "repeat",
   "info.circle.fill" : "info",
+  "checkmark.circle.fill": "check",
+  "xmark.circle.fill": "error",
+  "exclamationmark.triangle.fill": "warning",
 } as IconMapping;
 
 /**
