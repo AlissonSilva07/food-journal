@@ -37,6 +37,7 @@ export default function MealIngredientsTab({
 
   const onAddItem = () => {
     inputText.setFocused(false);
+    inputText.onChangeText("");
     input1Ref.current?.blur();
     Keyboard.dismiss();
     ingredients.add(inputText.value);

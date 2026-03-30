@@ -1,14 +1,17 @@
 import { db } from "@/core/db/client";
+import { DarkTheme, DefaultTheme } from "@react-navigation/native";
 import { useMigrations } from "drizzle-orm/expo-sqlite/migrator";
 import { useFonts } from "expo-font";
-import { ActivityIndicator } from "react-native";
+import { ActivityIndicator, useColorScheme, View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { AppToast } from "./core/components/ui/app-toast";
+import { useThemeColor } from "./core/hooks/use-theme-color";
 import migrations from "./drizzle/migrations";
 import { Navigation } from "./screens/Navigator";
 
 function DatabaseProvider({ children }: { children: React.ReactNode }) {
   const { success, error } = useMigrations(db, migrations);
+  const background = useThemeColor({}, "background");
 
   if (error) {
     console.error("Migration error:", error);
@@ -19,10 +22,14 @@ function DatabaseProvider({ children }: { children: React.ReactNode }) {
     return <ActivityIndicator color={"white"} style={{ flex: 1 }} />;
   }
 
-  return <>{children}</>;
+  return (
+    <View style={{ flex: 1, backgroundColor: background }}>{children}</View>
+  );
 }
 
 export default function App() {
+  const theme = useColorScheme();
+  const isDark = theme === "dark";
   const [fontsLoaded] = useFonts({
     BricolageGrotesque: require("./assets/fonts/BricolageGrotesque.ttf"),
     GeistRegular: require("./assets/fonts/Geist-Regular.ttf"),
@@ -32,11 +39,11 @@ export default function App() {
   if (!fontsLoaded) return null;
 
   return (
-    <DatabaseProvider>
-      <SafeAreaProvider className="flex-1">
-        <Navigation />
+    <SafeAreaProvider style={{ flex: 1 }}>
+      <DatabaseProvider>
+        <Navigation theme={isDark ? DarkTheme : DefaultTheme} />
         <AppToast />
-      </SafeAreaProvider>
-    </DatabaseProvider>
+      </DatabaseProvider>
+    </SafeAreaProvider>
   );
 }
