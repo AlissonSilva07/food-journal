@@ -62,8 +62,6 @@ export function useNewMeal() {
     setTitleError(isTitleValid ? null : "O nome é inválido.");
     setSelectedMealTypeError(isTypeValid ? null : "O tipo é obrigatório.");
 
-    console.log(isTitleValid && isTypeValid);
-
     return isTitleValid && isTypeValid;
   }, [title, selectedMealType]);
 

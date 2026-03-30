@@ -4,7 +4,7 @@ import { IconSymbol } from "@/core/components/ui/icon-symbol";
 import { useThemeColor } from "@/core/hooks/use-theme-color";
 import { CameraType, CameraView, useCameraPermissions } from "expo-camera";
 import * as Haptics from "expo-haptics";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
   Dimensions,
@@ -13,6 +13,7 @@ import {
   StyleSheet,
   View,
 } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 interface MealInfoTabProps {
   key: number;
@@ -30,7 +31,9 @@ export default function MealCameraTab({
   imageUri,
   onContinue,
 }: MealInfoTabProps) {
+  const insets = useSafeAreaInsets();
   const [facing, setFacing] = useState<CameraType>("back");
+  const [torchOn, setTorchon] = useState(false);
   const [permission, requestPermission] = useCameraPermissions();
   const cameraRef = useRef<CameraView | null>(null);
 
@@ -41,23 +44,27 @@ export default function MealCameraTab({
   const inverseBackground = useThemeColor({}, "inverseBackground");
   const outline = useThemeColor({}, "outline");
   const cameraButtonRing = useThemeColor({}, "cameraButtonRing");
+  const surface = useThemeColor({}, "surface");
 
   const takePicture = async () => {
     if (cameraRef.current) {
-      const photo = await cameraRef.current.takePictureAsync({
-        base64: true,
-        quality: 0.8,
-        skipProcessing: false,
-      });
-      cameraRef.current.pausePreview();
-      imageUri.setValue(photo.uri);
-      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      try {
+        const photo = await cameraRef.current.takePictureAsync({
+          quality: 0.8,
+          skipProcessing: false,
+          shutterSound: false,
+        });
+        imageUri.setValue(photo.uri);
+        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      } catch (e) {
+        console.error("Capture failed", e);
+        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+      }
     }
   };
 
   const resetCamera = () => {
     imageUri.setValue(null);
-    cameraRef.current?.resumePreview();
   };
 
   const pickImage = (uri: string) => {
@@ -65,6 +72,13 @@ export default function MealCameraTab({
     imageUri.setValue(uri);
     onContinue();
   };
+
+  const [isReady, setIsReady] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsReady(true), 300);
+    return () => clearTimeout(timer);
+  }, []);
 
   if (!permission) {
     return (
@@ -122,12 +136,18 @@ export default function MealCameraTab({
     setFacing((current) => (current === "back" ? "front" : "back"));
   }
 
+  function toggleCameraFlash() {
+    setTorchon((prev) => !prev);
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+  }
+
   return (
     <View
       style={[
         styles.container,
         {
           backgroundColor: background,
+          paddingBottom: insets.bottom + 32,
         },
       ]}
       key={key}
@@ -136,40 +156,40 @@ export default function MealCameraTab({
         <AppText fontFamily="display" fontSize="2xl" fontColor={textPrimary}>
           Câmera
         </AppText>
-        {imageUri.value ? (
-          <View
-            style={[
-              styles.camera,
-              { height: screenHeight / 2, borderColor: outline },
-            ]}
-          >
-            <Image source={{ uri: imageUri.value }} style={{ flex: 1 }} />
-          </View>
-        ) : (
-          <View
-            style={[
-              styles.camera,
-              { height: screenHeight / 2, borderColor: outline },
-            ]}
-          >
+        {!imageUri.value && isReady ? (
+          <View style={[styles.camera, { flex: 1, borderColor: outline }]}>
             <CameraView
               ref={cameraRef}
               style={{
                 flex: 1,
               }}
               facing={facing}
-              enableTorch={false}
+              enableTorch={torchOn}
+              onCameraReady={() => console.log("Hardware ready")}
             />
-            <Pressable
-              style={[styles.toggleFacingButton, { backgroundColor: primary }]}
-              onPress={toggleCameraFacing}
-            >
-              <IconSymbol name="repeat" size={24} color={onPrimary} />
-            </Pressable>
+          </View>
+        ) : (
+          <View style={[styles.camera, { flex: 1, borderColor: outline }]}>
+            <Image source={{ uri: imageUri.value! }} style={{ flex: 1 }} />
           </View>
         )}
         {!imageUri.value ? (
-          <View style={styles.buttonsContainer}>
+          <View style={styles.cameraButtonsContainer}>
+            <Pressable
+              style={[
+                styles.cameraToolButton,
+                {
+                  backgroundColor: surface,
+                },
+              ]}
+              onPress={toggleCameraFlash}
+            >
+              <IconSymbol
+                name={torchOn ? "flashlight.on.fill" : "flashlight.slash"}
+                size={32}
+                color={textPrimary}
+              />
+            </Pressable>
             <Pressable
               style={[
                 styles.cameraButton,
@@ -180,7 +200,20 @@ export default function MealCameraTab({
                 },
               ]}
               onPress={takePicture}
-            />
+            >
+              <IconSymbol name="camera.aperture" size={24} color="black" />
+            </Pressable>
+            <Pressable
+              style={[
+                styles.cameraToolButton,
+                {
+                  backgroundColor: surface,
+                },
+              ]}
+              onPress={toggleCameraFacing}
+            >
+              <IconSymbol name="repeat" size={32} color={textPrimary} />
+            </Pressable>
           </View>
         ) : (
           <View style={styles.buttonsContainer}>
@@ -264,8 +297,22 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   cameraButton: {
-    width: 64,
+    width: 128,
     height: 64,
     borderRadius: 100,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  cameraToolButton: {
+    padding: 8,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 100,
+  },
+  cameraButtonsContainer: {
+    width: "100%",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-around",
   },
 });

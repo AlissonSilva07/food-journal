@@ -72,7 +72,11 @@ export default function MealInfoTab({
   };
 
   useEffect(() => {
-    input1Ref.current?.focus();
+    const timeout = setTimeout(() => {
+      input1Ref.current?.focus();
+    }, 300); // 300ms is usually enough for any transition
+
+    return () => clearTimeout(timeout);
   }, []);
 
   return (
@@ -99,7 +103,6 @@ export default function MealInfoTab({
           onFocus={() => title.setFocused(true)}
           onBlur={() => title.setFocused(false)}
           onSubmitEditing={() => {
-            description.setFocused(false);
             input2Ref.current?.focus();
           }}
           returnKeyType="next"
@@ -115,10 +118,8 @@ export default function MealInfoTab({
           onFocus={() => description.setFocused(true)}
           onBlur={() => description.setFocused(false)}
           onSubmitEditing={() => {
-            description.setFocused(false);
-            input2Ref.current?.blur();
-            mealtype.setFocused(true);
             Keyboard.dismiss();
+            mealtype.setFocused(true);
           }}
           returnKeyType="next"
           hasErrors={false}
@@ -142,9 +143,6 @@ export default function MealInfoTab({
                     },
                   ]}
                   onPress={() => {
-                    Keyboard.dismiss();
-                    input1Ref.current?.blur();
-                    input2Ref.current?.blur();
                     mealtype.setFocused(true);
                     mealtype.setSelectedMealType(mt);
                   }}

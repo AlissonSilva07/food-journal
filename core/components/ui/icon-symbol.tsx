@@ -36,7 +36,11 @@ const MAPPING = {
   "checkmark.circle.fill": "check",
   "xmark.circle.fill": "error",
   "exclamationmark.triangle.fill": "warning",
-  "trash": "delete"
+  "trash": "delete",
+  "camera.aperture": "camera",
+  "bolt.circle.fill": "offline-bolt",
+  "flashlight.on.fill": "flashlight-on",
+  "flashlight.slash": "flashlight-off"
 } as IconMapping;
 
 /**
