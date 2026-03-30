@@ -35,12 +35,19 @@ export default function MealIngredientsTab({
 
   const input1Ref = useRef<TextInput | null>(null);
 
+  const onAddItem = () => {
+    inputText.setFocused(false);
+    input1Ref.current?.blur();
+    Keyboard.dismiss();
+    ingredients.add(inputText.value);
+  };
+
   const renderListItem = ({ item }: { item: string }) => {
     return (
       <View style={[styles.ingredientContainer, { backgroundColor: surface }]}>
         <AppText fontColor={onSurface}>{item}</AppText>
         <Pressable onPress={() => ingredients.remove(item)}>
-          <IconSymbol name="xmark" size={24} color={onSurface} />
+          <IconSymbol name="xmark" size={20} color={onSurface} />
         </Pressable>
       </View>
     );
@@ -82,18 +89,10 @@ export default function MealIngredientsTab({
             isFocused={inputText.isFocused}
             onFocus={() => inputText.setFocused(true)}
             onBlur={() => inputText.setFocused(false)}
-            onEndEditing={() => {
-              inputText.setFocused(false);
-              input1Ref.current?.blur();
-              Keyboard.dismiss();
-              ingredients.add(inputText.value);
-            }}
+            onEndEditing={onAddItem}
             returnKeyType="done"
             placeholder="Adicione um ingrediente"
-            callBack={() => {
-              inputText.onChangeText("");
-              ingredients.add(inputText.value);
-            }}
+            callBack={onAddItem}
           />
         </View>
         <View style={styles.spacer} />

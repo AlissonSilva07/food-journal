@@ -53,6 +53,7 @@ export const AppInput = forwardRef<TextInput, AppInputProps>(
 
 const styles = StyleSheet.create({
   container: {
+    width: "100%",
     flexDirection: "column",
     gap: 8,
   },

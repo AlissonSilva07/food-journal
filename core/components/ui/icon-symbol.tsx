@@ -31,7 +31,8 @@ const MAPPING = {
   "xmark": "close",
   "arrow.right" : "arrow-forward",
   "exclamationmark.bubble.fill" : "info",
-  "repeat" : "repeat"
+  "repeat" : "repeat",
+  "info.circle.fill" : "info",
 } as IconMapping;
 
 /**

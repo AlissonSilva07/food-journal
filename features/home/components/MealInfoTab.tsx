@@ -1,6 +1,5 @@
 import { AppInput } from "@/core/components/ui/app-input";
 import { AppText } from "@/core/components/ui/app-text";
-import { MealEntryType } from "@/features/home/components/HomeSection";
 import { useThemeColor } from "@/core/hooks/use-theme-color";
 import React, { useEffect, useRef } from "react";
 import {
@@ -11,6 +10,7 @@ import {
   TextInput,
   View,
 } from "react-native";
+import { MealEntryType } from "../types/meal.types";
 
 interface MealInfoTabProps {
   key: number;

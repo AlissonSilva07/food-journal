@@ -37,6 +37,7 @@ export function HomeSection({ meals }: HomeSectionProps) {
   const onSurface = useThemeColor({}, "onSurface");
   const textPrimary = useThemeColor({}, "text");
   const textSecondary = useThemeColor({}, "textSecondary");
+  const itemEmptyBg = useThemeColor({}, "tabBar");
 
   const [assets, error] = useAssets([
     require("@/assets/images/logo-light.png"),
@@ -155,22 +156,50 @@ export function HomeSection({ meals }: HomeSectionProps) {
         </AppText>
       )}
       renderSectionHeader={({ section }) => {
+        const isSectionEmpty = section.data.length === 0;
         return (
-          <View style={styles.sectionTitleRow}>
-            <IconSymbol
-              name={renderSectionTitle(section.title).iconName}
-              size={12}
-              color={textSecondary}
-            />
+          <View
+            style={[
+              styles.sectionTitleRow,
+              {
+                justifyContent: isSectionEmpty ? "space-between" : "flex-start",
+              },
+            ]}
+          >
             <AppText fontSize="sm" fontColor={textSecondary}>
               {renderSectionTitle(section.title).title}
             </AppText>
+            {isSectionEmpty && (
+              <View
+                style={[
+                  styles.itemEmptyIndicator,
+                  { backgroundColor: surface },
+                ]}
+              >
+                <IconSymbol
+                  name="info.circle.fill"
+                  size={12}
+                  color={textSecondary}
+                />
+                <AppText fontSize="sm" fontColor={textSecondary}>
+                  Não registrado
+                </AppText>
+              </View>
+            )}
           </View>
         );
       }}
       renderItem={({ item }) => (
         <View style={[styles.itemContainer, { backgroundColor: surface }]}>
-          <Image source={{ uri: item.imageUri! }} style={styles.image} />
+          {item.imageUri ? (
+            <Image source={{ uri: item.imageUri! }} style={styles.itemImage} />
+          ) : (
+            <View
+              style={[styles.itemEmptyImage, { backgroundColor: itemEmptyBg }]}
+            >
+              <IconSymbol name="fork.knife" size={24} color={textPrimary} />
+            </View>
+          )}
           <View style={styles.textContainer}>
             <AppText bold fontColor={textPrimary}>
               {item.title}
@@ -184,19 +213,6 @@ export function HomeSection({ meals }: HomeSectionProps) {
           <IconSymbol name="chevron.right" size={20} color={textSecondary} />
         </View>
       )}
-      renderSectionFooter={({ section }) => {
-        if (section.data.length === 0) {
-          return (
-            <View style={styles.emptyItem}>
-              <IconSymbol name="fork.knife" size={24} color={textSecondary} />
-              <AppText fontSize="sm" fontColor={textSecondary}>
-                Nenhum item cadastrado
-              </AppText>
-            </View>
-          );
-        }
-        return null;
-      }}
       style={styles.section}
       contentContainerStyle={[
         styles.sectionScroll,
@@ -210,6 +226,7 @@ export function HomeSection({ meals }: HomeSectionProps) {
 
 const styles = StyleSheet.create({
   sectionTitleRow: {
+    width: "100%",
     flexDirection: "row",
     alignItems: "center",
     gap: 4,
@@ -231,9 +248,24 @@ const styles = StyleSheet.create({
     gap: 16,
     borderRadius: 16,
   },
-  image: {
+  itemImage: {
     width: 64,
     height: 64,
+    borderRadius: 100,
+  },
+  itemEmptyImage: {
+    width: 64,
+    height: 64,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 100,
+  },
+  itemEmptyIndicator: {
+    paddingVertical: 2,
+    paddingHorizontal: 8,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
     borderRadius: 100,
   },
   textContainer: {

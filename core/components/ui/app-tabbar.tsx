@@ -29,7 +29,7 @@ export const AppTabBar = ({
       style={[
         styles.blurView,
         {
-          bottom: insets.bottom + 16,
+          bottom: insets.bottom,
           marginHorizontal: screenWidth / 8,
           backgroundColor: surface,
         },
