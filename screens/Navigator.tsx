@@ -10,8 +10,9 @@ import HomeScreen from "./HomeScreen";
 import MealDetailsScreen from "./MealDetailsScreen";
 import MenuScreen from "./MenuScreen";
 import NewMealScreen from "./NewMealScreen";
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-export const HomeStack = createStackNavigator({
+export const HomeStack = createNativeStackNavigator({
   screens: {
     Index: {
       screen: HomeScreen,
