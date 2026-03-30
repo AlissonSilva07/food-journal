@@ -1,4 +1,4 @@
-import { MealEntryType } from "@/core/components/ui/home-section";
+import { MealEntryType } from "@/features/home/components/HomeSection";
 import { useMealStore } from "@/core/store/meals.store";
 import { useCallback, useState } from "react";
 

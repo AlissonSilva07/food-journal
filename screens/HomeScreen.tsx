@@ -1,6 +1,6 @@
 import { MainLayout } from "@/core/components/layout/MainLayout";
 import AppTopBar from "@/core/components/ui/app-top-bar";
-import { HomeSection } from "@/core/components/ui/home-section";
+import { HomeSection } from "@/features/home/components/HomeSection";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { useAssets } from "expo-asset";
 import React from "react";
@@ -22,7 +22,7 @@ export default function HomeScreen() {
   const renderAsset = () => {
     if (assets && assets.length > 0) {
       if (isDarkTheme) {
-        <Image source={{ uri: assets[1].uri }} style={styles.headerImage} />;
+        return <Image source={{ uri: assets[1].uri }} style={styles.headerImage} />;
       } else {
         return (
           <Image source={{ uri: assets[0].uri }} style={styles.headerImage} />

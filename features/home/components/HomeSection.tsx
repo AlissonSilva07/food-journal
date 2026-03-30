@@ -1,56 +1,63 @@
+import { MealWithIngredients } from "@/core/db/schema";
 import { useThemeColor } from "@/core/hooks/use-theme-color";
-import { SymbolViewProps } from "expo-symbols";
+import { RootTabParamList } from "@/screens/Navigator";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { useAssets } from "expo-asset";
 import React from "react";
-import { Image, SectionList, StyleSheet, View } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { IconSymbol } from "./icon-symbol";
-import { AppText } from "./app-text";
 import {
-  MealWithIngredients,
-} from "@/core/db/schema";
-
-export type MealEntryType =
-  | "BREAKFAST"
-  | "LUNCH"
-  | "SNACK"
-  | "DINNER"
-  | "OTHER";
-
-export interface MealEntry {
-  id: number;
-  title: string;
-  description?: string;
-  ingredients?: string[];
-  meal_type: MealEntryType;
-  score: number;
-  timestamp?: Date;
-  photo_url?: string;
-}
-
-export interface MealSection {
-  title: MealEntryType;
-  data: MealWithIngredients[];
-}
-
-export interface MealSectionTitle {
-  title: string;
-  iconName: SymbolViewProps["name"];
-}
+  Image,
+  Pressable,
+  SectionList,
+  StyleSheet,
+  useColorScheme,
+  View,
+} from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { AppText } from "../../../core/components/ui/app-text";
+import { IconSymbol } from "../../../core/components/ui/icon-symbol";
+import {
+  MealEntryType,
+  MealSection,
+  MealSectionTitle,
+} from "../types/meal.types";
 
 interface HomeSectionProps {
-  meals: MealWithIngredients[]
+  meals: MealWithIngredients[];
 }
 
-
-export function HomeSection({
-  meals
-}: HomeSectionProps) {
+export function HomeSection({ meals }: HomeSectionProps) {
+  const navigation = useNavigation<NavigationProp<RootTabParamList>>();
   const insets = useSafeAreaInsets();
 
+  const colorScheme = useColorScheme();
+  const isDarkTheme = colorScheme === "dark";
+
+  const primary = useThemeColor({}, "primary");
   const surface = useThemeColor({}, "surface");
   const onSurface = useThemeColor({}, "onSurface");
   const textPrimary = useThemeColor({}, "text");
   const textSecondary = useThemeColor({}, "textSecondary");
+
+  const [assets, error] = useAssets([
+    require("@/assets/images/logo-light.png"),
+    require("@/assets/images/logo-dark.png"),
+  ]);
+
+  const renderAsset = () => {
+    if (assets && assets.length > 0) {
+      if (isDarkTheme) {
+        return (
+          <Image source={{ uri: assets[1].uri }} style={styles.emptyImage} />
+        );
+      } else {
+        return (
+          <Image source={{ uri: assets[0].uri }} style={styles.emptyImage} />
+        );
+      }
+    }
+
+    return null;
+  };
 
   const mealOrder: MealEntryType[] = ["BREAKFAST", "LUNCH", "SNACK", "DINNER"];
 
@@ -108,6 +115,36 @@ export function HomeSection({
     return mealSection;
   };
 
+  if (meals.length === 0) {
+    return (
+      <View style={styles.emptyContainer}>
+        <AppText fontFamily="display" fontSize="2xl" fontColor={textPrimary}>
+          Hoje
+        </AppText>
+        <View style={styles.emptyContent}>
+          {renderAsset()}
+          <AppText fontFamily="display" fontSize="xl" fontColor={textPrimary}>
+            Está vazio por aqui...
+          </AppText>
+          <AppText fontFamily="body" fontSize="md" fontColor={textSecondary}>
+            Experimente adicionar uma refeição
+          </AppText>
+          <Pressable
+            onPress={() =>
+              navigation.navigate("Home", {
+                screen: "New",
+              })
+            }
+          >
+            <AppText fontFamily="body" fontSize="md" bold fontColor={primary}>
+              Adicionar
+            </AppText>
+          </Pressable>
+        </View>
+      </View>
+    );
+  }
+
   return (
     <SectionList
       sections={sortedSections}
@@ -150,7 +187,7 @@ export function HomeSection({
       renderSectionFooter={({ section }) => {
         if (section.data.length === 0) {
           return (
-            <View style={styles.emptyContainer}>
+            <View style={styles.emptyItem}>
               <IconSymbol name="fork.knife" size={24} color={textSecondary} />
               <AppText fontSize="sm" fontColor={textSecondary}>
                 Nenhum item cadastrado
@@ -204,10 +241,28 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     gap: 4,
   },
-  emptyContainer: {
+  emptyItem: {
     width: "100%",
     flexDirection: "column",
     alignItems: "center",
     gap: 4,
+  },
+  emptyContainer: {
+    flex: 1,
+    flexDirection: "column",
+    gap: 4,
+    paddingHorizontal: 16,
+  },
+  emptyContent: {
+    flex: 1,
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 8,
+  },
+  emptyImage: {
+    width: 88,
+    height: 88,
+    resizeMode: "contain",
   },
 });

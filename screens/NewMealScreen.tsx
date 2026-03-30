@@ -1,4 +1,3 @@
-import { MainLayout } from "@/core/components/layout/MainLayout";
 import AppTopBar from "@/core/components/ui/app-top-bar";
 import { useThemeColor } from "@/core/hooks/use-theme-color";
 import MealCameraTab from "@/features/home/components/MealCameraTab";
@@ -8,13 +7,16 @@ import { useNewMeal } from "@/features/home/hooks/useNewMeal";
 import { NavigationProp } from "@react-navigation/native";
 import { useNavigation } from "expo-router";
 import React from "react";
-import { StyleSheet, View } from "react-native";
+import { Platform, StyleSheet, View } from "react-native";
 import { usePagerView } from "react-native-pager-view";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { RootTabParamList } from "./Navigator";
 
 export default function NewMealScreen() {
+  const insets = useSafeAreaInsets();
   const navigation = useNavigation<NavigationProp<RootTabParamList>>();
-  const textPrimary = useThemeColor({}, "text");
+
+  const background = useThemeColor({}, "background");
 
   const { AnimatedPagerView, ref, activePage, setPage, onPageSelected } =
     usePagerView({
@@ -113,37 +115,42 @@ export default function NewMealScreen() {
   };
 
   return (
-    <MainLayout>
-      <View style={styles.container}>
-        {renderTopBar()}
-        <View style={styles.spacer} />
-        <AnimatedPagerView
-          ref={ref}
-          style={styles.pagerView}
-          initialPage={0}
-          scrollEnabled={false}
-          onPageSelected={onPageSelected}
-        >
-          <MealInfoTab
-            key={0}
-            title={title}
-            description={description}
-            mealtype={mealtype}
-            getMealTypeTitle={getMealTypeTitle}
-          />
-          <MealCameraTab
-            key={1}
-            imageUri={imageUri}
-            onContinue={goToNextPage}
-          />
-          <MealIngredientsTab
-            key={2}
-            inputText={inputText}
-            ingredients={ingredients}
-          />
-        </AnimatedPagerView>
-      </View>
-    </MainLayout>
+    <View
+      style={[
+        styles.container,
+        {
+          paddingTop: Platform.select({
+            ios: 0,
+            android: insets.top,
+          }),
+          backgroundColor: background,
+        },
+      ]}
+    >
+      {renderTopBar()}
+      <View style={styles.spacer} />
+      <AnimatedPagerView
+        ref={ref}
+        style={styles.pagerView}
+        initialPage={0}
+        scrollEnabled={false}
+        onPageSelected={onPageSelected}
+      >
+        <MealInfoTab
+          key={0}
+          title={title}
+          description={description}
+          mealtype={mealtype}
+          getMealTypeTitle={getMealTypeTitle}
+        />
+        <MealCameraTab key={1} imageUri={imageUri} onContinue={goToNextPage} />
+        <MealIngredientsTab
+          key={2}
+          inputText={inputText}
+          ingredients={ingredients}
+        />
+      </AnimatedPagerView>
+    </View>
   );
 }
 
