@@ -50,7 +50,7 @@ export const AppTextField = forwardRef<TextInput, AppInputProps>(
           autoCorrect={false}
         />
         <Pressable style={[styles.button, { backgroundColor: surface }]} onPress={callBack}>
-            <AppText fontSize="sm" fontColor={textPrimary}>Adicionar</AppText>
+            <AppText fontSize="sm" fontColor={textPrimary} bold>Adicionar</AppText>
         </Pressable>
       </View>
     );
@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     fontSize: 16,
-    fontFamily: "BricolageGrotesque",
+    fontFamily: "Geist",
   },
   button: {
     padding: 8,

@@ -1,4 +1,5 @@
 import { MainLayout } from "@/core/components/layout/MainLayout";
+import { AppAlert } from "@/core/components/ui/app-alert";
 import { AppButton } from "@/core/components/ui/app-button";
 import { AppFlowRow } from "@/core/components/ui/app-flow-row";
 import { AppText } from "@/core/components/ui/app-text";
@@ -9,6 +10,7 @@ import { useMealStore } from "@/core/store/meals.store";
 import { MealEntryType } from "@/feature/home/types/meal.types";
 import { NavigationProp, RouteProp, useRoute } from "@react-navigation/native";
 import { useAssets } from "expo-asset";
+import * as Haptics from "expo-haptics";
 import { useNavigation } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
@@ -32,8 +34,9 @@ export default function MealDetailsScreen() {
   const route = useRoute<RouteProp<HomeStackParamList, "MealDetails">>();
   const { id } = route.params;
 
-  const { isLoading, fetchMealById } = useMealStore();
+  const { isLoading, fetchMealById, deleteMeal } = useMealStore();
   const [meal, setMeal] = useState<MealWithIngredients | undefined>(undefined);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const colorScheme = useColorScheme();
   const isDarkTheme = colorScheme === "dark";
@@ -91,6 +94,15 @@ export default function MealDetailsScreen() {
     }
 
     return mealSection;
+  };
+
+  const handleDelete = (id: number) => {
+    deleteMeal(id);
+    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+    if (navigation.canGoBack()) {
+      setIsDialogOpen(false);
+      navigation.goBack();
+    }
   };
 
   useEffect(() => {
@@ -152,7 +164,7 @@ export default function MealDetailsScreen() {
               }
               trailing={{
                 iconName: "trash",
-                action: () => {},
+                action: () => setIsDialogOpen(true),
               }}
             />
             <View style={styles.spacer} />
@@ -203,7 +215,9 @@ export default function MealDetailsScreen() {
                         key={i.id}
                         style={[styles.flowItem, { backgroundColor: surface }]}
                       >
-                        <AppText fontColor={onSurface} bold>{i.name}</AppText>
+                        <AppText fontColor={onSurface} bold>
+                          {i.name}
+                        </AppText>
                       </View>
                     ))}
                   </AppFlowRow>
@@ -220,6 +234,24 @@ export default function MealDetailsScreen() {
           </View>
         )}
       </View>
+
+      <AppAlert
+        title="Atenção"
+        visible={isDialogOpen}
+        onClose={() => setIsDialogOpen(false)}
+        positiveButton={{
+          title: "Sim",
+          action: () => handleDelete(id),
+        }}
+        negativeButton={{
+          title: "Não",
+          action: () => setIsDialogOpen(false),
+        }}
+      >
+        <AppText fontColor={textPrimary}>
+          Deseja realmente deletar este item?
+        </AppText>
+      </AppAlert>
     </MainLayout>
   );
 }

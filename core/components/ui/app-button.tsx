@@ -31,6 +31,7 @@ export function AppButton({
   const foreground = useThemeColor({}, "onPrimary");
   const surface = useThemeColor({}, "surface");
   const onSurface = useThemeColor({}, "onSurface");
+  const outline = useThemeColor({}, "outline");
 
   const getButtonColors = () => {
     let colors: ButtonColors = {};
@@ -46,6 +47,7 @@ export function AppButton({
         colors = {
           bg: "transparent",
           text: background,
+          stroke: "transparent",
         };
         break;
       case "disabled":

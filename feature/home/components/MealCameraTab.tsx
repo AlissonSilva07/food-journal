@@ -157,7 +157,7 @@ export default function MealCameraTab({
           Câmera
         </AppText>
         {!imageUri.value && isReady ? (
-          <View style={[styles.camera, { flex: 1, borderColor: outline }]}>
+          <View style={[styles.camera, { height: screenHeight / 1.8 , borderColor: outline }]}>
             <CameraView
               ref={cameraRef}
               style={{
@@ -169,7 +169,7 @@ export default function MealCameraTab({
             />
           </View>
         ) : (
-          <View style={[styles.camera, { flex: 1, borderColor: outline }]}>
+          <View style={[styles.camera, { height: screenHeight / 1.8, borderColor: outline }]}>
             <Image source={{ uri: imageUri.value! }} style={{ flex: 1 }} />
           </View>
         )}
