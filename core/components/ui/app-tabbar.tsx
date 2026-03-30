@@ -3,7 +3,7 @@ import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import { PlatformPressable } from "@react-navigation/elements";
 import { useLinkBuilder } from "@react-navigation/native";
 import * as Haptics from "expo-haptics";
-import { Dimensions, StyleSheet, View } from "react-native";
+import { Dimensions, StyleSheet, useColorScheme, View } from "react-native";
 import Animated, { FadeInDown, FadeOutDown } from "react-native-reanimated";
 import { EdgeInsets } from "react-native-safe-area-context";
 import { IconSymbol } from "./icon-symbol";
@@ -21,6 +21,8 @@ export const AppTabBar = ({
   insets,
 }: AppTabBarProps) => {
   const { buildHref } = useLinkBuilder();
+  const isDark = useColorScheme() === "dark";
+
   const surface = useThemeColor({}, "surface");
   const textSecondary = useThemeColor({}, "textSecondary");
   const background = useThemeColor({}, "background");
@@ -33,6 +35,10 @@ export const AppTabBar = ({
   const currentNestedRoute = nestedState?.routes[nestedState.index ?? 0]?.name;
 
   const hiddenTabRoutes = ["New", "MealDetails"];
+
+  const shadowColor = isDark ? "#000" : "#000";
+  const shadowOpacity = isDark ? 0.5 : 0.1;
+  const shadowRadius = isDark ? 10 : 15;
 
   if (currentNestedRoute && hiddenTabRoutes.includes(currentNestedRoute)) {
     return null;
@@ -47,11 +53,23 @@ export const AppTabBar = ({
         {
           bottom: insets.bottom + 8,
           marginHorizontal: screenWidth / 8,
-          backgroundColor: surface,
+          shadowColor: shadowColor,
+          shadowOpacity: shadowOpacity,
+          shadowRadius: shadowRadius,
+          elevation: isDark ? 10 : 5,
         },
       ]}
     >
-      <View style={styles.tabbar}>
+      <View
+        style={[
+          styles.tabbar,
+          {
+            backgroundColor: surface,
+            borderWidth: 1,
+            borderColor: isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.05)",
+          },
+        ]}
+      >
         {state.routes.map((route, index) => {
           const { options } = descriptors[route.key];
           const label = options.title;
@@ -138,8 +156,9 @@ const styles = StyleSheet.create({
     position: "absolute",
     left: 0,
     right: 0,
-    borderRadius: 100,
-    overflow: "hidden",
+    shadowOffset: { width: 0, height: 6 },
+    backgroundColor: "transparent",
+    zIndex: 100,
   },
   tabbar: {
     flexDirection: "row",
@@ -148,6 +167,7 @@ const styles = StyleSheet.create({
     padding: 4,
     borderRadius: 100,
     gap: 8,
+    overflow: "hidden",
   },
   tabbarItem: {
     flex: 1,

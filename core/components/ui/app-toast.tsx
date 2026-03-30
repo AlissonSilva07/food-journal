@@ -67,7 +67,7 @@ const toastIcon: Record<ToastType, SymbolViewProps["name"]> = {
 const styles = StyleSheet.create({
   toast: {
     position: "absolute",
-    top: 64,
+    top: 88,
     borderRadius: 100,
     paddingVertical: 8,
     paddingHorizontal: 16,
