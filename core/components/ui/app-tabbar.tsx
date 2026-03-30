@@ -2,6 +2,7 @@ import { useThemeColor } from "@/core/hooks/use-theme-color";
 import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import { PlatformPressable } from "@react-navigation/elements";
 import { useLinkBuilder } from "@react-navigation/native";
+import * as Haptics from "expo-haptics";
 import { Dimensions, StyleSheet, View } from "react-native";
 import Animated, { FadeInDown, FadeOutDown } from "react-native-reanimated";
 import { EdgeInsets } from "react-native-safe-area-context";
@@ -93,6 +94,7 @@ export const AppTabBar = ({
             });
 
             if (!isFocused && !event.defaultPrevented) {
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft);
               navigation.navigate(route.name, route.params);
             }
           };

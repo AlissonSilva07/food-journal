@@ -1,3 +1,5 @@
+import { AppAlert } from "@/core/components/ui/app-alert";
+import { AppText } from "@/core/components/ui/app-text";
 import AppTopBar from "@/core/components/ui/app-top-bar";
 import { useThemeColor } from "@/core/hooks/use-theme-color";
 import MealCameraTab from "@/feature/home/components/MealCameraTab";
@@ -5,6 +7,7 @@ import MealInfoTab from "@/feature/home/components/MealInfoTab";
 import MealIngredientsTab from "@/feature/home/components/MealIngredientsScreen";
 import { useNewMeal } from "@/feature/home/hooks/useNewMeal";
 import { NavigationProp } from "@react-navigation/native";
+import * as Haptics from "expo-haptics";
 import { useNavigation } from "expo-router";
 import React from "react";
 import { Platform, StyleSheet, View } from "react-native";
@@ -17,6 +20,7 @@ export default function NewMealScreen() {
   const navigation = useNavigation<NavigationProp<RootTabParamList>>();
 
   const background = useThemeColor({}, "background");
+  const textPrimary = useThemeColor({}, "text");
 
   const { AnimatedPagerView, ref, activePage, setPage, onPageSelected } =
     usePagerView({
@@ -33,6 +37,7 @@ export default function NewMealScreen() {
     inputText,
     ingredients,
     saveMeal,
+    dialog,
   } = useNewMeal();
 
   const goToNextPage = () => {
@@ -55,6 +60,13 @@ export default function NewMealScreen() {
     }
   };
 
+  const handleCancel = () => {
+    if (navigation.canGoBack()) {
+      dialog.setValue(false);
+      navigation.goBack();
+    }
+  };
+
   const saveAndGoBack = async () => {
     await saveMeal();
     setTimeout(() => {
@@ -69,7 +81,10 @@ export default function NewMealScreen() {
           <AppTopBar
             leading={{
               iconName: "xmark",
-              action: navigation.goBack,
+              action: () => {
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft);
+                dialog.setValue(true);
+              },
             }}
             trailing={{
               text: "Próximo",
@@ -152,6 +167,26 @@ export default function NewMealScreen() {
           ingredients={ingredients}
         />
       </AnimatedPagerView>
+
+      <AppAlert
+        title="Atenção"
+        visible={dialog.value}
+        onClose={() => dialog.setValue(false)}
+        positiveButton={{
+          title: "Sim",
+          action: handleCancel,
+        }}
+        negativeButton={{
+          title: "Não",
+          action: () => {
+            dialog.setValue(false);
+          },
+        }}
+      >
+        <AppText fontColor={textPrimary}>
+          Deseja realmente sair? Suas alterações serão desfeitas.
+        </AppText>
+      </AppAlert>
     </View>
   );
 }

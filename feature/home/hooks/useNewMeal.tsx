@@ -8,6 +8,8 @@ export function useNewMeal() {
   const showToast = useToastStore((state) => state.showToast);
   const { addMeal } = useMealStore();
 
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
   // MEAL INFO
   const [title, setTitle] = useState("");
   const [titleError, setTitleError] = useState<string | null>(null);
@@ -158,5 +160,9 @@ export function useNewMeal() {
       checkDuplicate: (ingredient: string) => checkDuplicate(ingredient),
     },
     saveMeal,
+    dialog: {
+      value: isDialogOpen,
+      setValue: setIsDialogOpen
+    }
   };
 }
