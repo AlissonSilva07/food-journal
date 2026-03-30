@@ -1,9 +1,13 @@
 import { AppTabBar } from "@/core/components/ui/app-tabbar";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { createStaticNavigation } from "@react-navigation/native";
+import {
+  createStaticNavigation,
+  NavigatorScreenParams,
+} from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import GalleryScreen from "./GalleryScreen";
 import HomeScreen from "./HomeScreen";
+import MealDetailsScreen from "./MealDetailsScreen";
 import MenuScreen from "./MenuScreen";
 import NewMealScreen from "./NewMealScreen";
 
@@ -16,15 +20,25 @@ export const HomeStack = createStackNavigator({
         headerShown: false,
       },
     },
+    MealDetails: {
+      screen: MealDetailsScreen,
+      options: {
+        title: "Details",
+        headerShown: false,
+      },
+      linking: {
+        path: "meal/:id",
+      },
+    },
   },
   groups: {
     Modal: {
       screenOptions: {
         presentation: "modal",
-        headerShown: false
+        headerShown: false,
       },
       screens: {
-        New: NewMealScreen
+        New: NewMealScreen,
       },
     },
   },
@@ -69,14 +83,11 @@ export type RootStackType = typeof RootStack;
 export type HomeStackParamList = {
   Index: undefined;
   New: undefined;
-  Camera: undefined;
-  Ingredients: undefined;
+  MealDetails: { id: number };
 };
 
 export type RootTabParamList = {
-  Home: {
-    screen: keyof HomeStackParamList;
-  };
+  Home: NavigatorScreenParams<HomeStackParamList>;
   Gallery: undefined;
   Menu: undefined;
 };

@@ -190,7 +190,15 @@ export function HomeSection({ meals }: HomeSectionProps) {
         );
       }}
       renderItem={({ item }) => (
-        <View style={[styles.itemContainer, { backgroundColor: surface }]}>
+        <Pressable
+          style={[styles.itemContainer, { backgroundColor: surface }]}
+          onPress={() =>
+            navigation.navigate("Home", {
+              screen: "MealDetails",
+              params: { id: item.id }
+            })
+          }
+        >
           {item.imageUri ? (
             <Image source={{ uri: item.imageUri! }} style={styles.itemImage} />
           ) : (
@@ -211,7 +219,7 @@ export function HomeSection({ meals }: HomeSectionProps) {
             )}
           </View>
           <IconSymbol name="chevron.right" size={20} color={textSecondary} />
-        </View>
+        </Pressable>
       )}
       style={styles.section}
       contentContainerStyle={[

@@ -17,6 +17,7 @@ interface MealStore {
     ingredientsList: string[],
   ) => Promise<{ success: boolean; error?: string }>;
   fetchMeals: () => Promise<void>;
+  fetchMealById: (id: number) => Promise<MealWithIngredients | undefined>;
   deleteMeal: (id: number) => Promise<void>;
 }
 
@@ -82,6 +83,29 @@ export const useMealStore = create<MealStore>((set, get) => ({
       set({ mealsList: result });
     } catch (error) {
       console.error("Error fetching meals:", error);
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+
+  fetchMealById: async (id: number) => {
+    set({ isLoading: true });
+    try {
+      const result = await db.query.meals.findFirst({
+        where: eq(meals.id, id),
+        with: {
+          ingredients: true,
+        },
+      });
+
+      if (!result) {
+        throw new Error("Meal not found");
+      }
+
+      return result;
+    } catch (error) {
+      console.error(`Error fetching meal with id ${id}`, error);
+      throw error;
     } finally {
       set({ isLoading: false });
     }
