@@ -1,12 +1,12 @@
 import { MainLayout } from "@/core/components/layout/MainLayout";
 import AppTopBar from "@/core/components/ui/app-top-bar";
-import { HomeSection } from "@/features/home/components/HomeSection";
+import { HomeSection } from "@/feature/home/components/HomeSection";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { useAssets } from "expo-asset";
 import React from "react";
 import { Image, StyleSheet, useColorScheme, View } from "react-native";
 import { RootTabParamList } from "./Navigator";
-import { useHome } from "@/features/home/hooks/useHome";
+import { useHome } from "@/feature/home/hooks/useHome";
 
 export default function HomeScreen() {
   const colorScheme = useColorScheme();

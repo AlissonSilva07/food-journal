@@ -1,20 +1,23 @@
 import { MainLayout } from "@/core/components/layout/MainLayout";
+import { AppButton } from "@/core/components/ui/app-button";
+import { AppFlowRow } from "@/core/components/ui/app-flow-row";
 import { AppText } from "@/core/components/ui/app-text";
 import AppTopBar from "@/core/components/ui/app-top-bar";
 import { MealWithIngredients } from "@/core/db/schema";
 import { useThemeColor } from "@/core/hooks/use-theme-color";
 import { useMealStore } from "@/core/store/meals.store";
-import { MealEntryType } from "@/features/home/types/meal.types";
+import { MealEntryType } from "@/feature/home/types/meal.types";
 import { NavigationProp, RouteProp, useRoute } from "@react-navigation/native";
+import { useAssets } from "expo-asset";
 import { useNavigation } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Dimensions,
   Image,
-  Platform,
   ScrollView,
   StyleSheet,
+  useColorScheme,
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -32,6 +35,9 @@ export default function MealDetailsScreen() {
   const { isLoading, fetchMealById } = useMealStore();
   const [meal, setMeal] = useState<MealWithIngredients | undefined>(undefined);
 
+  const colorScheme = useColorScheme();
+  const isDarkTheme = colorScheme === "dark";
+
   const background = useThemeColor({}, "background");
   const textPrimary = useThemeColor({}, "text");
   const textSecondary = useThemeColor({}, "textSecondary");
@@ -39,6 +45,27 @@ export default function MealDetailsScreen() {
   const outline = useThemeColor({}, "outline");
   const surface = useThemeColor({}, "surface");
   const onSurface = useThemeColor({}, "onSurface");
+
+  const [assets, error] = useAssets([
+    require("@/assets/images/logo-light.png"),
+    require("@/assets/images/logo-dark.png"),
+  ]);
+
+  const renderAsset = () => {
+    if (assets && assets.length > 0) {
+      if (isDarkTheme) {
+        return (
+          <Image source={{ uri: assets[1].uri }} style={styles.emptyImage} />
+        );
+      } else {
+        return (
+          <Image source={{ uri: assets[0].uri }} style={styles.emptyImage} />
+        );
+      }
+    }
+
+    return null;
+  };
 
   const getMealType = (type: MealEntryType | undefined) => {
     if (!type) return null;
@@ -85,10 +112,6 @@ export default function MealDetailsScreen() {
         style={[
           styles.container,
           {
-            paddingTop: Platform.select({
-              ios: 0,
-              android: insets.top,
-            }),
             backgroundColor: background,
           },
         ]}
@@ -150,7 +173,15 @@ export default function MealDetailsScreen() {
                 {meal.imageUri ? (
                   <Image source={{ uri: meal.imageUri }} style={{ flex: 1 }} />
                 ) : (
-                  <View></View>
+                  <View
+                    style={{
+                      flex: 1,
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    {renderAsset()}
+                  </View>
                 )}
               </View>
               {meal.description && (
@@ -162,18 +193,30 @@ export default function MealDetailsScreen() {
                 </View>
               )}
               {meal.ingredients && meal.ingredients.length > 0 && (
-                <View style={[styles.surfaceContainer]}>
+                <View style={styles.surfaceContainer}>
                   <AppText fontSize="sm" fontColor={textSecondary} bold>
                     Ingredientes
                   </AppText>
-                  {meal.ingredients.map((i) => (
-                    <AppText key={i.id} fontColor={onSurface}>
-                      {i.name}
-                    </AppText>
-                  ))}
+                  <AppFlowRow style={styles.flowContainer}>
+                    {meal.ingredients.map((i) => (
+                      <View
+                        key={i.id}
+                        style={[styles.flowItem, { backgroundColor: surface }]}
+                      >
+                        <AppText fontColor={onSurface}>{i.name}</AppText>
+                      </View>
+                    ))}
+                  </AppFlowRow>
                 </View>
               )}
             </ScrollView>
+            <View
+              style={{
+                padding: 16,
+              }}
+            >
+              <AppButton title="Compartilhar" />
+            </View>
           </View>
         )}
       </View>
@@ -195,6 +238,9 @@ const styles = StyleSheet.create({
   spacer: {
     height: 16,
   },
+  spacerFlex: {
+    flex: 1,
+  },
   titleContainer: {
     maxWidth: "40%",
     flexDirection: "column",
@@ -213,6 +259,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   contentSpacingScroll: {
+    flexGrow: 1,
     paddingHorizontal: 16,
     gap: 16,
   },
@@ -224,5 +271,21 @@ const styles = StyleSheet.create({
     width: "100%",
     borderRadius: 16,
     overflow: "hidden",
+  },
+  emptyImage: {
+    width: 120,
+    height: 120,
+    resizeMode: "contain",
+  },
+  flowContainer: {
+    width: "100%",
+    justifyContent: "flex-start",
+  },
+  flowItem: {
+    paddingVertical: 4,
+    paddingHorizontal: 8,
+    borderRadius: 8,
+    alignItems: "center",
+    justifyContent: "center",
   },
 });

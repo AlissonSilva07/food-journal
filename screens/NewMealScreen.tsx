@@ -1,9 +1,9 @@
 import AppTopBar from "@/core/components/ui/app-top-bar";
 import { useThemeColor } from "@/core/hooks/use-theme-color";
-import MealCameraTab from "@/features/home/components/MealCameraTab";
-import MealInfoTab from "@/features/home/components/MealInfoTab";
-import MealIngredientsTab from "@/features/home/components/MealIngredientsScreen";
-import { useNewMeal } from "@/features/home/hooks/useNewMeal";
+import MealCameraTab from "@/feature/home/components/MealCameraTab";
+import MealInfoTab from "@/feature/home/components/MealInfoTab";
+import MealIngredientsTab from "@/feature/home/components/MealIngredientsScreen";
+import { useNewMeal } from "@/feature/home/hooks/useNewMeal";
 import { NavigationProp } from "@react-navigation/native";
 import { useNavigation } from "expo-router";
 import React from "react";

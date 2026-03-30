@@ -3,6 +3,7 @@ import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import { PlatformPressable } from "@react-navigation/elements";
 import { useLinkBuilder } from "@react-navigation/native";
 import { Dimensions, StyleSheet, View } from "react-native";
+import Animated, { FadeInDown, FadeOutDown } from "react-native-reanimated";
 import { EdgeInsets } from "react-native-safe-area-context";
 import { IconSymbol } from "./icon-symbol";
 
@@ -24,12 +25,26 @@ export const AppTabBar = ({
   const background = useThemeColor({}, "background");
   const inverseBackground = useThemeColor({}, "inverseBackground");
 
+  const focusedRoute = state.routes[state.index];
+  const focusedDescriptor = descriptors[focusedRoute.key];
+
+  const nestedState = focusedRoute.state;
+  const currentNestedRoute = nestedState?.routes[nestedState.index ?? 0]?.name;
+
+  const hiddenTabRoutes = ["New", "MealDetails"];
+
+  if (currentNestedRoute && hiddenTabRoutes.includes(currentNestedRoute)) {
+    return null;
+  }
+
   return (
-    <View
+    <Animated.View
+      entering={FadeInDown.duration(250)}
+      exiting={FadeOutDown.duration(250)}
       style={[
-        styles.blurView,
+        styles.container,
         {
-          bottom: insets.bottom,
+          bottom: insets.bottom + 8,
           marginHorizontal: screenWidth / 8,
           backgroundColor: surface,
         },
@@ -112,12 +127,12 @@ export const AppTabBar = ({
           );
         })}
       </View>
-    </View>
+    </Animated.View>
   );
 };
 
 const styles = StyleSheet.create({
-  blurView: {
+  container: {
     position: "absolute",
     left: 0,
     right: 0,
