@@ -98,7 +98,7 @@ export default function MealInfoTab({
           isFocused={title.isFocused}
           onFocus={() => title.setFocused(true)}
           onBlur={() => title.setFocused(false)}
-          onEndEditing={() => {
+          onSubmitEditing={() => {
             description.setFocused(false);
             input2Ref.current?.focus();
           }}
@@ -114,7 +114,7 @@ export default function MealInfoTab({
           isFocused={description.isFocused}
           onFocus={() => description.setFocused(true)}
           onBlur={() => description.setFocused(false)}
-          onEndEditing={() => {
+          onSubmitEditing={() => {
             description.setFocused(false);
             input2Ref.current?.blur();
             mealtype.setFocused(true);
@@ -141,10 +141,11 @@ export default function MealInfoTab({
                       backgroundColor: isSelected ? primary : background,
                     },
                   ]}
-                  onPressIn={() => {
+                  onPress={() => {
                     Keyboard.dismiss();
                     input1Ref.current?.blur();
                     input2Ref.current?.blur();
+                    mealtype.setFocused(true);
                     mealtype.setSelectedMealType(mt);
                   }}
                 >

@@ -203,7 +203,7 @@ export default function MealDetailsScreen() {
                         key={i.id}
                         style={[styles.flowItem, { backgroundColor: surface }]}
                       >
-                        <AppText fontColor={onSurface}>{i.name}</AppText>
+                        <AppText fontColor={onSurface} bold>{i.name}</AppText>
                       </View>
                     ))}
                   </AppFlowRow>

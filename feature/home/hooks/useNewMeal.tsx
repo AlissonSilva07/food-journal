@@ -1,7 +1,8 @@
 import { useMealStore } from "@/core/store/meals.store";
+import { useToastStore } from "@/core/store/toast.store";
+import * as Haptics from "expo-haptics";
 import { useCallback, useState } from "react";
 import { MealEntryType } from "../types/meal.types";
-import { useToastStore } from "@/core/store/toast.store";
 
 export function useNewMeal() {
   const showToast = useToastStore((state) => state.showToast);
@@ -102,15 +103,17 @@ export function useNewMeal() {
     );
 
     if (result.success) {
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       showToast({
         message: "Salvo com sucesso!",
-        type: "success"
-      })
+        type: "success",
+      });
     } else {
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
       showToast({
         message: "Erro ao salvar",
-        type: "error"
-      })
+        type: "error",
+      });
     }
 
     return result;
@@ -156,6 +159,6 @@ export function useNewMeal() {
       remove: (ingredient: string) => removeFromList(ingredient),
       checkDuplicate: (ingredient: string) => checkDuplicate(ingredient),
     },
-    saveMeal
+    saveMeal,
   };
 }
