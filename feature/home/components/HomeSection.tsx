@@ -191,9 +191,7 @@ export function HomeSection({ meals }: HomeSectionProps) {
         );
       }}
       renderItem={({ item }) => {
-        const itemImageUri = item.imageUri
-          ? `${Paths.document.uri}/${item.imageUri}`
-          : null;
+        const itemImageUri = `${Paths.document.uri}/${item.imageUri}`;
         return (
           <Pressable
             style={[styles.itemContainer, { backgroundColor: surface }]}

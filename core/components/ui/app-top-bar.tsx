@@ -4,14 +4,18 @@ import { TopBarButton, TopBarButtonProps } from "./topbar-button";
 
 interface AppTopBarProps {
   leading?: TopBarButtonProps;
+  leadingItem?: ReactNode;
   center?: ReactNode;
   trailing?: TopBarButtonProps;
+  trailingItem?: ReactNode;
 }
 
 export default function AppTopBar({
   leading,
+  leadingItem,
   center,
   trailing,
+  trailingItem
 }: AppTopBarProps) {
   const hasMoreThanOneItem = leading || center || trailing;
   return (
@@ -31,6 +35,7 @@ export default function AppTopBar({
           action={leading.action}
         />
       )}
+      {leadingItem && leadingItem}
       {center && center}
       {trailing && (
         <TopBarButton
@@ -40,6 +45,7 @@ export default function AppTopBar({
           action={trailing.action}
         />
       )}
+      {trailingItem && trailingItem}
     </View>
   );
 }

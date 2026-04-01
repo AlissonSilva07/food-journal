@@ -1,11 +1,13 @@
 import { MainLayout } from "@/core/components/layout/MainLayout";
 import { AppText } from "@/core/components/ui/app-text";
 import AppTopBar from "@/core/components/ui/app-top-bar";
+import { IconSymbol } from "@/core/components/ui/icon-symbol";
+import { useShare } from "@/core/hooks/use-share";
 import { useThemeColor } from "@/core/hooks/use-theme-color";
 import { RootTabParamList } from "@/navigation/Navigator";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import React from "react";
-import { StyleSheet, View } from "react-native";
+import { ActivityIndicator, Pressable, StyleSheet, View } from "react-native";
 import Animated, {
   FadeIn,
   FadeInDown,
@@ -18,9 +20,12 @@ import { useGallery } from "../hooks/useGallery";
 export default function GalleryScreen() {
   const navigation = useNavigation<NavigationProp<RootTabParamList>>();
 
-  const { mealsList, selectedMeal, shareImage } = useGallery();
+  const { mealsList, selectedMeal } = useGallery();
+  const { isLoading, shareImage } = useShare();
 
   const textPrimary = useThemeColor({}, "text");
+  const surface = useThemeColor({}, "surface");
+  const onSurface = useThemeColor({}, "onSurface");
 
   const renderTopBar = () => {
     if (selectedMeal.value) {
@@ -46,13 +51,29 @@ export default function GalleryScreen() {
                 </AppText>
               </View>
             }
-            trailing={
-              selectedMeal.value.imageUri !== null
-                ? {
-                    iconName: "square.and.arrow.up",
-                    action: () => shareImage(selectedMeal.value?.imageUri!),
-                  }
-                : undefined
+            trailingItem={
+              selectedMeal.value.imageUri !== null ? (
+                <Pressable
+                  disabled={isLoading}
+                  onPress={() => shareImage(selectedMeal.value?.imageUri!)}
+                  style={[
+                    styles.topButton,
+                    {
+                      backgroundColor: surface,
+                    },
+                  ]}
+                >
+                  {isLoading ? (
+                    <ActivityIndicator size={24} color={onSurface} />
+                  ) : (
+                    <IconSymbol
+                      name="square.and.arrow.up"
+                      size={24}
+                      color={onSurface}
+                    />
+                  )}
+                </Pressable>
+              ) : undefined
             }
           />
         </Animated.View>
@@ -112,5 +133,11 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     gap: 2,
     alignItems: "center",
+  },
+  topButton: {
+    padding: 8,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 16,
   },
 });

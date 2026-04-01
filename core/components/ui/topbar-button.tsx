@@ -16,7 +16,7 @@ export function TopBarButton({
   iconName,
   action,
   text,
-  actionType = "secondary",
+  actionType = "secondary"
 }: TopBarButtonProps) {
   const background = useThemeColor({}, "primary");
   const foreground = useThemeColor({}, "onPrimary");

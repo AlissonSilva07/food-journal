@@ -47,9 +47,7 @@ export function GridView({ mealsHistory, selectedMeal }: GridViewProps) {
   );
 
   if (selectedMeal.value?.imageUri) {
-    const itemImageUri = selectedMeal.value?.imageUri
-      ? `${Paths.document.uri}/${selectedMeal.value.imageUri}`
-      : null;
+    const itemImageUri = `${Paths.document.uri}/${selectedMeal.value.imageUri}`;
 
     return (
       <View
@@ -85,9 +83,7 @@ export function GridView({ mealsHistory, selectedMeal }: GridViewProps) {
     <FlatList
       data={validMeals}
       renderItem={({ item }) => {
-        const itemImageUri = item.imageUri
-          ? `${Paths.document.uri}/${item.imageUri}`
-          : null;
+        const itemImageUri = `${Paths.document.uri}/${item.imageUri}`;
 
         return (
           <Pressable
@@ -128,6 +124,8 @@ const styles = StyleSheet.create({
   },
   item: {
     borderWidth: 1,
+    borderRadius: 16,
+    overflow: "hidden",
   },
   titlePadding: {
     paddingHorizontal: 16,

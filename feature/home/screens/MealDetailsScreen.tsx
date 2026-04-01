@@ -5,6 +5,7 @@ import { AppFlowRow } from "@/core/components/ui/app-flow-row";
 import { AppText } from "@/core/components/ui/app-text";
 import AppTopBar from "@/core/components/ui/app-top-bar";
 import { MealWithIngredients } from "@/core/db/schema";
+import { useShare } from "@/core/hooks/use-share";
 import { useThemeColor } from "@/core/hooks/use-theme-color";
 import { useMealStore } from "@/core/store/meals.store";
 import { MealEntryType } from "@/feature/home/types/meal.types";
@@ -23,7 +24,11 @@ import {
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { HomeStackParamList, RootTabParamList } from "../../../navigation/Navigator";
+import {
+  HomeStackParamList,
+  RootTabParamList,
+} from "../../../navigation/Navigator";
+import { Paths } from "expo-file-system/next";
 
 const screenHeight = Dimensions.get("screen").height;
 
@@ -34,7 +39,12 @@ export default function MealDetailsScreen() {
   const route = useRoute<RouteProp<HomeStackParamList, "MealDetails">>();
   const { id } = route.params;
 
-  const { isLoading, fetchMealById, deleteMeal } = useMealStore();
+  const {
+    isLoading: isLoadingMeals,
+    fetchMealById,
+    deleteMeal,
+  } = useMealStore();
+  const { isLoading: isLoadingShare, shareImage } = useShare();
   const [meal, setMeal] = useState<MealWithIngredients | undefined>(undefined);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
@@ -116,6 +126,8 @@ export default function MealDetailsScreen() {
     fetchMeal();
   }, [id]);
 
+  const itemImageUri = `${Paths.document.uri}/${meal?.imageUri}`;
+
   if (!meal) return null;
 
   return (
@@ -128,7 +140,7 @@ export default function MealDetailsScreen() {
           },
         ]}
       >
-        {isLoading ? (
+        {isLoadingMeals ? (
           <View style={styles.loadingContainer}>
             <ActivityIndicator color={primary} />
           </View>
@@ -183,7 +195,7 @@ export default function MealDetailsScreen() {
                 ]}
               >
                 {meal.imageUri ? (
-                  <Image source={{ uri: meal.imageUri }} style={{ flex: 1 }} />
+                  <Image source={{ uri: itemImageUri }} style={{ flex: 1 }} />
                 ) : (
                   <View
                     style={{
@@ -229,7 +241,12 @@ export default function MealDetailsScreen() {
                 padding: 16,
               }}
             >
-              <AppButton title="Compartilhar" />
+              <AppButton
+                title="Compartilhar"
+                disabled={isLoadingShare}
+                variant={isLoadingShare ? "loading" : "default"}
+                onPress={() => shareImage(meal.imageUri!)}
+              />
             </View>
           </View>
         )}

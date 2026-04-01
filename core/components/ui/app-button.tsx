@@ -27,7 +27,8 @@ export function AppButton({
   variant = "default",
   ...rest
 }: AppButtonProps) {
-  const background = useThemeColor({}, "primary");
+  const primary = useThemeColor({}, "primary");
+  const background = useThemeColor({}, "background");
   const foreground = useThemeColor({}, "onPrimary");
   const surface = useThemeColor({}, "surface");
   const onSurface = useThemeColor({}, "onSurface");
@@ -39,7 +40,7 @@ export function AppButton({
     switch (variant) {
       case "default":
         colors = {
-          bg: background,
+          bg: primary,
           text: foreground,
         };
         break;
@@ -58,8 +59,8 @@ export function AppButton({
         break;
       case "loading":
         colors = {
-          bg: background,
-          text: foreground,
+          bg: surface,
+          text: primary,
         };
         break;
       default:
