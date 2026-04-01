@@ -5,11 +5,11 @@ import {
   NavigatorScreenParams,
 } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import GalleryScreen from "./GalleryScreen";
-import HomeScreen from "./HomeScreen";
-import MealDetailsScreen from "./MealDetailsScreen";
-import MenuScreen from "./MenuScreen";
-import NewMealScreen from "./NewMealScreen";
+import GalleryScreen from "../feature/gallery/screens/GalleryScreen";
+import HomeScreen from "../feature/home/screens/HomeScreen";
+import MealDetailsScreen from "../feature/home/screens/MealDetailsScreen";
+import MenuScreen from "../feature/menu/screen/MenuScreen";
+import NewMealScreen from "../feature/home/screens/NewMealScreen";
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 export const HomeStack = createNativeStackNavigator({

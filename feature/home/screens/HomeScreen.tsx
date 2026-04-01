@@ -5,7 +5,7 @@ import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { useAssets } from "expo-asset";
 import React from "react";
 import { Image, StyleSheet, useColorScheme, View } from "react-native";
-import { RootTabParamList } from "./Navigator";
+import { RootTabParamList } from "../../../navigation/Navigator";
 import { useHome } from "@/feature/home/hooks/useHome";
 
 export default function HomeScreen() {
@@ -13,8 +13,8 @@ export default function HomeScreen() {
   const isDarkTheme = colorScheme === "dark";
   const navigation = useNavigation<NavigationProp<RootTabParamList>>();
   const [assets, error] = useAssets([
-    require("../assets/images/logo-light-minimal.png"),
-    require("../assets/images/logo-dark-minimal.png"),
+    require("@/assets/images/logo-light-minimal.png"),
+    require("@/assets/images/logo-dark-minimal.png"),
   ]);
 
   const { todayMealsList } = useHome();

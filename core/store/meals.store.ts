@@ -35,13 +35,19 @@ export const useMealStore = create<MealStore>((set, get) => ({
       let finalImageUri = null;
 
       if (mealData.imageUri) {
-        const fileName =
-          mealData.imageUri.split("/").pop() || `meal_${Date.now()}.jpg`;
+        const extension = mealData.imageUri.split(".").pop() || "jpg";
+        const fileName = `meal_${Date.now()}_${Math.floor(Math.random() * 1000)}.${extension}`;
+
         const sourceFile = new File(mealData.imageUri);
         const destinationFile = new File(Paths.document, fileName);
 
-        sourceFile.copy(destinationFile);
-        finalImageUri = destinationFile.uri;
+        await sourceFile.copy(destinationFile);
+
+        if (destinationFile.exists) {
+          finalImageUri = fileName;
+        } else {
+          throw new Error("File copy failed: Destination does not exist.");
+        }
       }
 
       await db.transaction(async (tx) => {
@@ -64,7 +70,6 @@ export const useMealStore = create<MealStore>((set, get) => ({
       });
 
       await Promise.all([get().fetchAllMeals(), get().fetchTodayMeals()]);
-
       return { success: true };
     } catch (error) {
       console.error("Error adding meal:", error);
@@ -136,7 +141,7 @@ export const useMealStore = create<MealStore>((set, get) => ({
       const mealToDelete = get().mealsList.find((m) => m.id === id);
       await db.delete(meals).where(eq(meals.id, id));
       if (mealToDelete?.imageUri) {
-        const file = new File(mealToDelete.imageUri);
+        const file = new File(Paths.document, mealToDelete.imageUri);
         if (file.exists) {
           file.delete();
         }

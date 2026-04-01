@@ -7,7 +7,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { AppToast } from "./core/components/ui/app-toast";
 import { useThemeColor } from "./core/hooks/use-theme-color";
 import migrations from "./drizzle/migrations";
-import { Navigation } from "./screens/Navigator";
+import { Navigation } from "./navigation/Navigator";
 
 function DatabaseProvider({ children }: { children: React.ReactNode }) {
   const { success, error } = useMigrations(db, migrations);

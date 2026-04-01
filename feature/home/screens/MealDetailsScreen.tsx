@@ -23,7 +23,7 @@ import {
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { HomeStackParamList, RootTabParamList } from "./Navigator";
+import { HomeStackParamList, RootTabParamList } from "../../../navigation/Navigator";
 
 const screenHeight = Dimensions.get("screen").height;
 

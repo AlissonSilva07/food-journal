@@ -1,8 +1,9 @@
 import { MealWithIngredients } from "@/core/db/schema";
 import { useThemeColor } from "@/core/hooks/use-theme-color";
-import { RootTabParamList } from "@/screens/Navigator";
+import { RootTabParamList } from "@/navigation/Navigator";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { useAssets } from "expo-asset";
+import { Paths } from "expo-file-system/next";
 import React from "react";
 import {
   Image,
@@ -189,38 +190,46 @@ export function HomeSection({ meals }: HomeSectionProps) {
           </View>
         );
       }}
-      renderItem={({ item }) => (
-        <Pressable
-          style={[styles.itemContainer, { backgroundColor: surface }]}
-          onPress={() =>
-            navigation.navigate("Home", {
-              screen: "MealDetails",
-              params: { id: item.id }
-            })
-          }
-        >
-          {item.imageUri ? (
-            <Image source={{ uri: item.imageUri! }} style={styles.itemImage} />
-          ) : (
-            <View
-              style={[styles.itemEmptyImage, { backgroundColor: itemEmptyBg }]}
-            >
-              <IconSymbol name="fork.knife" size={24} color={textPrimary} />
-            </View>
-          )}
-          <View style={styles.textContainer}>
-            <AppText bold fontColor={textPrimary}>
-              {item.title}
-            </AppText>
-            {item.description && (
-              <AppText fontSize="sm" fontColor={textSecondary}>
-                {item.description}
-              </AppText>
+      renderItem={({ item }) => {
+        const itemImageUri = item.imageUri
+          ? `${Paths.document.uri}/${item.imageUri}`
+          : null;
+        return (
+          <Pressable
+            style={[styles.itemContainer, { backgroundColor: surface }]}
+            onPress={() =>
+              navigation.navigate("Home", {
+                screen: "MealDetails",
+                params: { id: item.id },
+              })
+            }
+          >
+            {item.imageUri ? (
+              <Image source={{ uri: itemImageUri! }} style={styles.itemImage} />
+            ) : (
+              <View
+                style={[
+                  styles.itemEmptyImage,
+                  { backgroundColor: itemEmptyBg },
+                ]}
+              >
+                <IconSymbol name="fork.knife" size={24} color={textPrimary} />
+              </View>
             )}
-          </View>
-          <IconSymbol name="chevron.right" size={20} color={textSecondary} />
-        </Pressable>
-      )}
+            <View style={styles.textContainer}>
+              <AppText bold fontColor={textPrimary}>
+                {item.title}
+              </AppText>
+              {item.description && (
+                <AppText fontSize="sm" fontColor={textSecondary}>
+                  {item.description}
+                </AppText>
+              )}
+            </View>
+            <IconSymbol name="chevron.right" size={20} color={textSecondary} />
+          </Pressable>
+        );
+      }}
       style={styles.section}
       contentContainerStyle={[
         styles.sectionScroll,

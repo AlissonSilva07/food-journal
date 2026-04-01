@@ -40,7 +40,8 @@ const MAPPING = {
   "camera.aperture": "camera",
   "bolt.circle.fill": "offline-bolt",
   "flashlight.on.fill": "flashlight-on",
-  "flashlight.slash": "flashlight-off"
+  "flashlight.slash": "flashlight-off",
+  "square.and.arrow.up": "share"
 } as IconMapping;
 
 /**

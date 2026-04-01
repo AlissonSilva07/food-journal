@@ -13,7 +13,7 @@ import React from "react";
 import { Platform, StyleSheet, View } from "react-native";
 import { usePagerView } from "react-native-pager-view";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { RootTabParamList } from "./Navigator";
+import { RootTabParamList } from "../../../navigation/Navigator";
 
 export default function NewMealScreen() {
   const insets = useSafeAreaInsets();
