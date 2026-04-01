@@ -5,24 +5,27 @@ import {
   MealWithIngredients,
   NewMeal,
 } from "@/core/db/schema";
-import { desc, eq } from "drizzle-orm";
+import { desc, eq, gte } from "drizzle-orm";
 import { File, Paths } from "expo-file-system/next";
 import { create } from "zustand";
 
 interface MealStore {
   mealsList: MealWithIngredients[];
+  todayMealsList: MealWithIngredients[];
   isLoading: boolean;
   addMeal: (
     mealData: NewMeal,
     ingredientsList: string[],
   ) => Promise<{ success: boolean; error?: string }>;
-  fetchMeals: () => Promise<void>;
+  fetchAllMeals: () => Promise<void>;
+  fetchTodayMeals: () => Promise<void>;
   fetchMealById: (id: number) => Promise<MealWithIngredients | undefined>;
   deleteMeal: (id: number) => Promise<void>;
 }
 
 export const useMealStore = create<MealStore>((set, get) => ({
   mealsList: [],
+  todayMealsList: [],
   isLoading: false,
 
   addMeal: async (mealData, ingredientsList) => {
@@ -60,7 +63,7 @@ export const useMealStore = create<MealStore>((set, get) => ({
         }
       });
 
-      await get().fetchMeals();
+      await Promise.all([get().fetchAllMeals(), get().fetchTodayMeals()]);
 
       return { success: true };
     } catch (error) {
@@ -71,18 +74,35 @@ export const useMealStore = create<MealStore>((set, get) => ({
     }
   },
 
-  fetchMeals: async () => {
+  fetchAllMeals: async () => {
     set({ isLoading: true });
     try {
       const result = await db.query.meals.findMany({
-        with: {
-          ingredients: true,
-        },
-        orderBy: [desc(meals.id)],
+        with: { ingredients: true },
+        orderBy: [desc(meals.createdAt)], // Order by actual date, not just ID
       });
       set({ mealsList: result });
     } catch (error) {
-      console.error("Error fetching meals:", error);
+      console.error("Error fetching all meals:", error);
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+
+  fetchTodayMeals: async () => {
+    set({ isLoading: true });
+    try {
+      const startOfDay = new Date();
+      startOfDay.setHours(0, 0, 0, 0);
+
+      const result = await db.query.meals.findMany({
+        where: gte(meals.createdAt, startOfDay),
+        with: { ingredients: true },
+        orderBy: [desc(meals.createdAt)],
+      });
+      set({ todayMealsList: result });
+    } catch (error) {
+      console.error("Error fetching today's meals:", error);
     } finally {
       set({ isLoading: false });
     }

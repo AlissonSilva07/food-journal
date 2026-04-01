@@ -2,13 +2,13 @@ import { useMealStore } from "@/core/store/meals.store";
 import { useEffect } from "react";
 
 export function useHome() {
-  const { fetchMeals, mealsList } = useMealStore();
+  const { fetchTodayMeals, todayMealsList } = useMealStore();
 
   useEffect(() => {
-    fetchMeals();
+    fetchTodayMeals();
   }, []);
 
   return {
-    mealsList
+    todayMealsList,
   };
 }

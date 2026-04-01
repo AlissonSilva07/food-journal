@@ -17,7 +17,7 @@ export default function HomeScreen() {
     require("../assets/images/logo-dark-minimal.png"),
   ]);
 
-  const { mealsList } = useHome();
+  const { todayMealsList } = useHome();
 
   const renderAsset = () => {
     if (assets && assets.length > 0) {
@@ -53,7 +53,7 @@ export default function HomeScreen() {
           }}
         />
         <View style={styles.spacer} />
-        <HomeSection meals={mealsList} />
+        <HomeSection meals={todayMealsList} />
       </View>
     </MainLayout>
   );
