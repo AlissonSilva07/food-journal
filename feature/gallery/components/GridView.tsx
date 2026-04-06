@@ -1,6 +1,9 @@
 import { AppText } from "@/core/components/ui/app-text";
 import { MealWithIngredients } from "@/core/db/schema";
 import { useThemeColor } from "@/core/hooks/use-theme-color";
+import { RootTabParamList } from "@/navigation/Navigator";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { useAssets } from "expo-asset";
 import { Paths } from "expo-file-system/next";
 import React from "react";
 import {
@@ -9,6 +12,7 @@ import {
   Image,
   Pressable,
   StyleSheet,
+  useColorScheme,
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -22,9 +26,12 @@ interface GridViewProps {
 }
 
 export function GridView({ mealsHistory, selectedMeal }: GridViewProps) {
+  const navigation = useNavigation<NavigationProp<RootTabParamList>>();
   const insets = useSafeAreaInsets();
   const textPrimary = useThemeColor({}, "text");
+  const textSecondary = useThemeColor({}, "textSecondary");
   const outline = useThemeColor({}, "outline");
+  const primary = useThemeColor({}, "primary");
 
   const validMeals = React.useMemo(() => {
     return mealsHistory.filter((meal) => !!meal.imageUri);
@@ -37,6 +44,30 @@ export function GridView({ mealsHistory, selectedMeal }: GridViewProps) {
 
   const margin = 4;
   const itemSize = screenWidth / numColumns - margin * 2;
+
+  const colorScheme = useColorScheme();
+  const isDarkTheme = colorScheme === "dark";
+
+  const [assets, error] = useAssets([
+    require("@/assets/images/logo-light.png"),
+    require("@/assets/images/logo-dark.png"),
+  ]);
+
+  const renderAsset = () => {
+    if (assets && assets.length > 0) {
+      if (isDarkTheme) {
+        return (
+          <Image source={{ uri: assets[1].uri }} style={styles.emptyImage} />
+        );
+      } else {
+        return (
+          <Image source={{ uri: assets[0].uri }} style={styles.emptyImage} />
+        );
+      }
+    }
+
+    return null;
+  };
 
   const ListHeaderComponent = () => (
     <View style={styles.titlePadding}>
@@ -74,6 +105,36 @@ export function GridView({ mealsHistory, selectedMeal }: GridViewProps) {
               resizeMode: "contain",
             }}
           />
+        </View>
+      </View>
+    );
+  }
+
+  if (mealsHistory.length === 0) {
+    return (
+      <View style={styles.emptyContainer}>
+        <AppText fontFamily="display" fontSize="2xl" fontColor={textPrimary}>
+          Galeria
+        </AppText>
+        <View style={styles.emptyContent}>
+          {renderAsset()}
+          <AppText fontFamily="display" fontSize="xl" fontColor={textPrimary}>
+            Está vazio por aqui...
+          </AppText>
+          <AppText fontFamily="body" fontSize="md" fontColor={textSecondary}>
+            Experimente adicionar uma refeição
+          </AppText>
+          <Pressable
+            onPress={() =>
+              navigation.navigate("Home", {
+                screen: "New",
+              })
+            }
+          >
+            <AppText fontFamily="body" fontSize="md" bold fontColor={primary}>
+              Adicionar
+            </AppText>
+          </Pressable>
         </View>
       </View>
     );
@@ -137,4 +198,22 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   fullImageItem: {},
+  emptyContainer: {
+    flex: 1,
+    flexDirection: "column",
+    gap: 4,
+    paddingHorizontal: 16,
+  },
+  emptyContent: {
+    flex: 1,
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 8,
+  },
+  emptyImage: {
+    width: 88,
+    height: 88,
+    resizeMode: "contain",
+  },
 });

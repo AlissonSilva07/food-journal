@@ -2,12 +2,21 @@ import { db } from "@/core/db/client";
 import { DarkTheme, DefaultTheme } from "@react-navigation/native";
 import { useMigrations } from "drizzle-orm/expo-sqlite/migrator";
 import { useFonts } from "expo-font";
+import * as SplashScreen from "expo-splash-screen";
+import { useEffect } from "react";
 import { ActivityIndicator, useColorScheme, View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { AppToast } from "./core/components/ui/app-toast";
 import { useThemeColor } from "./core/hooks/use-theme-color";
 import migrations from "./drizzle/migrations";
 import { Navigation } from "./navigation/Navigator";
+
+SplashScreen.setOptions({
+  duration: 1000,
+  fade: true,
+});
+
+SplashScreen.preventAutoHideAsync();
 
 function DatabaseProvider({ children }: { children: React.ReactNode }) {
   const { success, error } = useMigrations(db, migrations);
@@ -35,6 +44,12 @@ export default function App() {
     GeistRegular: require("./assets/fonts/Geist-Regular.ttf"),
     GeistBold: require("./assets/fonts/Geist-Bold.ttf"),
   });
+
+  useEffect(() => {
+    if (fontsLoaded) {
+      SplashScreen.hide();
+    }
+  }, [fontsLoaded]);
 
   if (!fontsLoaded) return null;
 

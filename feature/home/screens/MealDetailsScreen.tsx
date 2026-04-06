@@ -11,6 +11,7 @@ import { useMealStore } from "@/core/store/meals.store";
 import { MealEntryType } from "@/feature/home/types/meal.types";
 import { NavigationProp, RouteProp, useRoute } from "@react-navigation/native";
 import { useAssets } from "expo-asset";
+import { Paths } from "expo-file-system/next";
 import * as Haptics from "expo-haptics";
 import { useNavigation } from "expo-router";
 import React, { useEffect, useState } from "react";
@@ -28,7 +29,6 @@ import {
   HomeStackParamList,
   RootTabParamList,
 } from "../../../navigation/Navigator";
-import { Paths } from "expo-file-system/next";
 
 const screenHeight = Dimensions.get("screen").height;
 
@@ -208,14 +208,13 @@ export default function MealDetailsScreen() {
                   </View>
                 )}
               </View>
-              {meal.description && (
-                <View style={[styles.surfaceContainer]}>
-                  <AppText fontSize="sm" fontColor={textSecondary} bold>
-                    Descrição
-                  </AppText>
-                  <AppText fontColor={onSurface}>{meal?.description}</AppText>
-                </View>
-              )}
+              <View style={[styles.surfaceContainer]}>
+                <AppText fontSize="sm" fontColor={textSecondary} bold>
+                  Descrição
+                </AppText>
+                {meal.description && <AppText fontColor={onSurface}>{meal.description}</AppText>}
+                {!meal.description && <AppText fontColor={textSecondary}>{"Nehuma descrição"}</AppText>}
+              </View>
               {meal.ingredients && meal.ingredients.length > 0 && (
                 <View style={styles.surfaceContainer}>
                   <AppText fontSize="sm" fontColor={textSecondary} bold>

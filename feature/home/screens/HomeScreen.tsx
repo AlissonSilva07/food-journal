@@ -12,10 +12,12 @@ export default function HomeScreen() {
   const colorScheme = useColorScheme();
   const isDarkTheme = colorScheme === "dark";
   const navigation = useNavigation<NavigationProp<RootTabParamList>>();
+
   const [assets, error] = useAssets([
-    require("@/assets/images/logo-light-minimal.png"),
-    require("@/assets/images/logo-dark-minimal.png"),
-  ]);
+      require("@/assets/images/home-logo.png"),
+      require("@/assets/images/home-logo-dark.png"),
+    ]);
+  
 
   const { todayMealsList } = useHome();
 
@@ -75,8 +77,8 @@ const styles = StyleSheet.create({
     height: 16,
   },
   headerImage: {
-    height: 42,
-    width: 200,
+    height: 28,
+    width: 120,
     resizeMode: "contain",
   },
   body: {
