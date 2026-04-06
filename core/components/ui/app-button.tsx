@@ -47,7 +47,7 @@ export function AppButton({
       case "muted":
         colors = {
           bg: "transparent",
-          text: background,
+          text: primary,
           stroke: "transparent",
         };
         break;

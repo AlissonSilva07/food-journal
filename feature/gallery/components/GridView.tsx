@@ -42,7 +42,7 @@ export function GridView({ mealsHistory, selectedMeal }: GridViewProps) {
   const screenWidth = Dimensions.get("window").width;
   const screenHeight = Dimensions.get("window").height;
 
-  const margin = 4;
+  const margin = 2;
   const itemSize = screenWidth / numColumns - margin * 2;
 
   const colorScheme = useColorScheme();
@@ -152,7 +152,6 @@ export function GridView({ mealsHistory, selectedMeal }: GridViewProps) {
             style={[
               styles.item,
               {
-                borderColor: outline,
                 margin: margin,
                 height: itemSize,
                 width: itemSize,
@@ -184,9 +183,6 @@ const styles = StyleSheet.create({
     resizeMode: "cover",
   },
   item: {
-    borderWidth: 1,
-    borderRadius: 16,
-    overflow: "hidden",
   },
   titlePadding: {
     paddingHorizontal: 16,
