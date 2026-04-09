@@ -1,4 +1,5 @@
 import { AppTabBar } from "@/core/components/ui/app-tabbar";
+import InitScreen from "@/feature/init/screens/InitScreen";
 import OnboardingIndexScreen from "@/feature/onboarding/screens/OnboardingIndexScreen";
 import OnboardingUserAvatarScreen from "@/feature/onboarding/screens/OnboardingUserAvatarScreen";
 import OnboardingUserNameScreen from "@/feature/onboarding/screens/OnboardingUserNameScreen";
@@ -13,6 +14,18 @@ import HomeScreen from "../feature/home/screens/HomeScreen";
 import MealDetailsScreen from "../feature/home/screens/MealDetailsScreen";
 import NewMealScreen from "../feature/home/screens/NewMealScreen";
 import MenuScreen from "../feature/menu/screen/MenuScreen";
+
+export const InitStack = createNativeStackNavigator({
+  screens: {
+    Index: {
+      screen: InitScreen,
+      options: {
+        title: "InitScreen",
+        headerShown: false,
+      },
+    },
+  },
+});
 
 export const OnboardingStack = createNativeStackNavigator({
   screens: {
@@ -106,7 +119,12 @@ export const Tabs = createBottomTabNavigator({
 });
 
 export const RootStack = createNativeStackNavigator({
+  initialRouteName: "Init",
   screens: {
+    Init: {
+      screen: InitStack,
+      options: { headerShown: false },
+    },
     Onboarding: {
       screen: OnboardingStack,
       options: { headerShown: false },

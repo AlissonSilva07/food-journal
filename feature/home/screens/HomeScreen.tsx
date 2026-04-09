@@ -26,11 +26,7 @@ export default function HomeScreen() {
   const onSurface = useThemeColor({}, "onSurface");
 
   const { todayMealsList } = useHome();
-  const { isLoading, user, fetchUser } = useUserStore();
-
-  useEffect(() => {
-    fetchUser();
-  }, []);
+  const { isLoading, user } = useUserStore();
 
   const renderAvatar = () => {
     if (isLoading) {

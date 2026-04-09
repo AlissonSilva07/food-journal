@@ -7,6 +7,7 @@ import { create } from "zustand";
 interface UserStore {
   user: User | null;
   isLoading: boolean;
+  hasOnboarded: boolean;
   fetchUser: () => Promise<void>;
   setUser: (
     user: Omit<User, "id" | "createdAt">,
@@ -18,19 +19,25 @@ export const useUserStore = create<UserStore>((set, get) => ({
   user: null,
   isLoading: false,
 
+  hasOnboarded: false,
+
   fetchUser: async () => {
     set({ isLoading: true });
 
     try {
       const result = await db.query.user.findFirst();
 
-      if (!result) {
-        throw new Error("Usuário não encontrado");
+      if (result) {
+        set({
+          user: result,
+          hasOnboarded: true,
+        });
+      } else {
+        set({
+          user: null,
+          hasOnboarded: false,
+        });
       }
-
-      set({
-        user: result,
-      });
     } catch (error) {
       console.error("Erro ao buscar usuário:", error);
     } finally {
