@@ -1,8 +1,7 @@
 import { AppTabBar } from "@/core/components/ui/app-tabbar";
 import OnboardingIndexScreen from "@/feature/onboarding/screens/OnboardingIndexScreen";
-import OnboardingUserDataScreen, {
-  default as OnboardingScreen,
-} from "@/feature/onboarding/screens/OnboardingUserDataScreen";
+import OnboardingUserAvatarScreen from "@/feature/onboarding/screens/OnboardingUserAvatarScreen";
+import OnboardingUserNameScreen from "@/feature/onboarding/screens/OnboardingUserNameScreen";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import {
   createStaticNavigation,
@@ -24,10 +23,17 @@ export const OnboardingStack = createNativeStackNavigator({
         headerShown: false,
       },
     },
-    UserData: {
-      screen: OnboardingUserDataScreen,
+    UserName: {
+      screen: OnboardingUserNameScreen,
       options: {
-        title: "UserData",
+        title: "UserName",
+        headerShown: false,
+      },
+    },
+    UserAvatar: {
+      screen: OnboardingUserAvatarScreen,
+      options: {
+        title: "UserAvatar",
         headerShown: false,
       },
     },
@@ -118,7 +124,8 @@ export type RootStackType = typeof RootStack;
 
 export type OnboardingStackParamList = {
   Index: undefined;
-  UserData: undefined;
+  UserName: undefined;
+  UserAvatar: { name: string };
 };
 
 export type HomeStackParamList = {

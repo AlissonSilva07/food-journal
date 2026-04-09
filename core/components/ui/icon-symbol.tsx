@@ -41,7 +41,8 @@ const MAPPING = {
   "bolt.circle.fill": "offline-bolt",
   "flashlight.on.fill": "flashlight-on",
   "flashlight.slash": "flashlight-off",
-  "square.and.arrow.up": "share"
+  "square.and.arrow.up": "share",
+  "person.fill": "person"
 } as IconMapping;
 
 /**

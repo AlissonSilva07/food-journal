@@ -23,10 +23,11 @@ import {
 } from "../types/meal.types";
 
 interface HomeSectionProps {
+  title: string;
   meals: MealWithIngredients[];
 }
 
-export function HomeSection({ meals }: HomeSectionProps) {
+export function HomeSection({ title, meals }: HomeSectionProps) {
   const navigation = useNavigation<NavigationProp<RootTabParamList>>();
   const insets = useSafeAreaInsets();
 
@@ -121,7 +122,7 @@ export function HomeSection({ meals }: HomeSectionProps) {
     return (
       <View style={styles.emptyContainer}>
         <AppText fontFamily="display" fontSize="2xl" fontColor={textPrimary}>
-          Hoje
+          {title}
         </AppText>
         <View style={styles.emptyContent}>
           {renderAsset()}

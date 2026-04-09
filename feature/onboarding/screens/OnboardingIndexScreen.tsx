@@ -21,8 +21,6 @@ export default function OnboardingIndexScreen() {
   const [assets, error] = useAssets([
     require("@/assets/images/logo-light.png"),
     require("@/assets/images/logo-dark.png"),
-    require("@/assets/images/frame-create-dark.png"),
-    require("@/assets/images/frame-create-light.png"),
   ]);
 
   const { AnimatedPagerView, ref, activePage, setPage, onPageSelected, pages } =
@@ -34,7 +32,7 @@ export default function OnboardingIndexScreen() {
     if (activePage < 2) {
       setPage(activePage + 1);
     } else {
-      navigation.navigate("UserData");
+      navigation.navigate("UserName");
     }
   };
 

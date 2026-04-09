@@ -212,8 +212,14 @@ export default function MealDetailsScreen() {
                 <AppText fontSize="sm" fontColor={textSecondary} bold>
                   Descrição
                 </AppText>
-                {meal.description && <AppText fontColor={onSurface}>{meal.description}</AppText>}
-                {!meal.description && <AppText fontColor={textSecondary}>{"Nehuma descrição"}</AppText>}
+                {meal.description && (
+                  <AppText fontColor={onSurface}>{meal.description}</AppText>
+                )}
+                {!meal.description && (
+                  <AppText fontColor={textSecondary}>
+                    {"Nehuma descrição"}
+                  </AppText>
+                )}
               </View>
               {meal.ingredients && meal.ingredients.length > 0 && (
                 <View style={styles.surfaceContainer}>
