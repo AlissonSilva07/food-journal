@@ -42,7 +42,9 @@ const MAPPING = {
   "flashlight.on.fill": "flashlight-on",
   "flashlight.slash": "flashlight-off",
   "square.and.arrow.up": "share",
-  "person.fill": "person"
+  "person.fill": "person",
+  "iphone.gen3.motion": "aod",
+  "person.crop.circle.fill": "account-circle"
 } as IconMapping;
 
 /**

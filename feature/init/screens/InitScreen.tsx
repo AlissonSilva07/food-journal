@@ -21,7 +21,7 @@ export default function InitScreen() {
     async function bootstrap() {
       await fetchUser();
 
-      const { hasOnboarded, user } = useUserStore.getState();
+      const { hasOnboarded } = useUserStore.getState();
 
       if (hasOnboarded) {
         navigation.navigate("Main", {

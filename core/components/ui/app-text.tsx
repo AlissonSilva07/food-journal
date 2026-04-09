@@ -2,7 +2,7 @@ import React from "react";
 import { ColorValue, Text, TextProps, TextStyle } from "react-native";
 
 interface AppTextProps extends TextProps {
-  children?: string;
+  children?: React.ReactNode;
   fontFamily?: "display" | "body";
   fontSize?: "xs" | "sm" | "md" | "lg" | "xl" | "2xl";
   bold?: boolean;
