@@ -1,17 +1,22 @@
 import { MainLayout } from "@/core/components/layout/MainLayout";
+import { AppButton } from "@/core/components/ui/app-button";
+import { useThemeColor } from "@/core/hooks/use-theme-color";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { useAssets } from "expo-asset";
 import React from "react";
 import { Image, StyleSheet, useColorScheme, View } from "react-native";
 import { usePagerView } from "react-native-pager-view";
-import { RootTabParamList } from "../../../navigation/Navigator";
+import { OnboardingStackParamList } from "../../../navigation/Navigator";
 import { OnboardingCreateMealTab } from "../components/OnboardingCreateMealTab";
-import { AppButton } from "@/core/components/ui/app-button";
+import { OnboardingDisplayMealTab } from "../components/OnboardingDisplayMealTab";
+import { OnboardingShareMealTab } from "../components/OnboardingShareMealTab";
 
 export default function OnboardingIndexScreen() {
   const colorScheme = useColorScheme();
   const isDarkTheme = colorScheme === "dark";
-  const navigation = useNavigation<NavigationProp<RootTabParamList>>();
+  const navigation = useNavigation<NavigationProp<OnboardingStackParamList>>();
+  const textPrimary = useThemeColor({}, "text");
+  const surface = useThemeColor({}, "surface");
 
   const [assets, error] = useAssets([
     require("@/assets/images/logo-light.png"),
@@ -20,10 +25,18 @@ export default function OnboardingIndexScreen() {
     require("@/assets/images/frame-create-light.png"),
   ]);
 
-  const { AnimatedPagerView, ref, activePage, setPage, onPageSelected } =
+  const { AnimatedPagerView, ref, activePage, setPage, onPageSelected, pages } =
     usePagerView({
       pagesAmount: 3,
     });
+
+  const goToNextPage = () => {
+    if (activePage < 2) {
+      setPage(activePage + 1);
+    } else {
+      navigation.navigate("UserData");
+    }
+  };
 
   const renderLogoAsset = () => {
     if (assets && assets.length > 0) {
@@ -55,6 +68,30 @@ export default function OnboardingIndexScreen() {
     return null;
   };
 
+  const renderScrollIndicator = () => {
+    return (
+      <View style={styles.tabScrollIndicatorContainer}>
+        {pages &&
+          pages.map((indicator, index) => {
+            const isActive = indicator === activePage;
+            return (
+              <View
+                key={index}
+                style={[
+                  styles.tabScrollIndicator,
+                  {
+                    backgroundColor: isActive ? textPrimary : surface,
+                    width: isActive ? 12 : 10,
+                    height: isActive ? 12 : 10,
+                  },
+                ]}
+              />
+            );
+          })}
+      </View>
+    );
+  };
+
   return (
     <MainLayout>
       <View style={styles.tabHeader}>{renderLogoAsset()}</View>
@@ -62,13 +99,18 @@ export default function OnboardingIndexScreen() {
         ref={ref}
         style={styles.container}
         initialPage={0}
-        scrollEnabled={false}
         onPageSelected={onPageSelected}
       >
         <OnboardingCreateMealTab key={0} />
+        <OnboardingShareMealTab key={1} />
+        <OnboardingDisplayMealTab key={2} />
       </AnimatedPagerView>
       <View style={styles.tabFooter}>
-        <AppButton title="Próximo" />
+        {renderScrollIndicator()}
+        <AppButton
+          title={activePage === 2 ? "Continuar" : "Próximo"}
+          onPress={goToNextPage}
+        />
       </View>
     </MainLayout>
   );
@@ -98,7 +140,20 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 16,
   },
+  tabScrollIndicator: {
+    borderRadius: 100,
+  },
+  tabScrollIndicatorContainer: {
+    width: "100%",
+    paddingHorizontal: 16,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 8
+  },
   tabFooter: {
-    
-  }
+    flexDirection: "column",
+    gap: 16,
+    paddingHorizontal: 16,
+  },
 });

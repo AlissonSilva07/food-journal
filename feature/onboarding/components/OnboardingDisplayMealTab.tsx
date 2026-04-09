@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import Animated, { FadeIn } from "react-native-reanimated";
 
-export function OnboardingCreateMealTab({ key }: { key: number }) {
+export function OnboardingDisplayMealTab({ key }: { key: number }) {
   const colorScheme = useColorScheme();
   const isDarkTheme = colorScheme === "dark";
   const textPrimary = useThemeColor({}, "text");
@@ -19,8 +19,8 @@ export function OnboardingCreateMealTab({ key }: { key: number }) {
   const screenHeight = Dimensions.get("screen").height;
 
   const [assets, error] = useAssets([
-    require("@/assets/images/frame-create-dark.png"),
-    require("@/assets/images/frame-create-light.png"),
+    require("@/assets/images/frame-display-dark.png"),
+    require("@/assets/images/frame-display-light.png"),
   ]);
 
   const renderImageAsset = () => {
@@ -65,7 +65,7 @@ export function OnboardingCreateMealTab({ key }: { key: number }) {
             fontColor={textPrimary}
             alignment="center"
           >
-            Registre suas refeições diariamente
+            Visualize suas entradas na galeria
           </AppText>
         </Animated.Text>
         {renderImageAsset()}

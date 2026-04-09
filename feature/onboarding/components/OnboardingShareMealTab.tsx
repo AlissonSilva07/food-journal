@@ -19,8 +19,8 @@ export function OnboardingShareMealTab({ key }: { key: number }) {
   const screenHeight = Dimensions.get("screen").height;
 
   const [assets, error] = useAssets([
-    require("@/assets/images/frame-create-dark.png"),
-    require("@/assets/images/frame-create-light.png"),
+    require("@/assets/images/frame-detail-dark.png"),
+    require("@/assets/images/frame-detail-light.png"),
   ]);
 
   const renderImageAsset = () => {
@@ -65,7 +65,7 @@ export function OnboardingShareMealTab({ key }: { key: number }) {
             fontColor={textPrimary}
             alignment="center"
           >
-            Registre suas refeições diárias
+            Compartilhe com amigos e família
           </AppText>
         </Animated.Text>
         {renderImageAsset()}
