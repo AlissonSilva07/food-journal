@@ -71,7 +71,7 @@ export default function MenuScreen() {
         <AppTopBar
           leading={{
             iconName: "arrow.backward",
-            action: () => {},
+            action: () => navigation.goBack(),
           }}
         />
         <View style={styles.spacer} />
@@ -129,7 +129,7 @@ export default function MenuScreen() {
               Editar meu perfil
             </AppText>
             <View style={{ flex: 1 }} />
-            <IconSymbol name="chevron.forward" size={20} color={textPrimary} />
+            <IconSymbol name="chevron.forward" size={20} color={textSecondary} />
           </Pressable>
           <View style={[styles.itemSeparator, { backgroundColor: outline }]} />
           <Pressable style={styles.item}>
@@ -151,7 +151,7 @@ export default function MenuScreen() {
               Rever o tutorial
             </AppText>
             <View style={{ flex: 1 }} />
-            <IconSymbol name="chevron.forward" size={20} color={textPrimary} />
+            <IconSymbol name="chevron.forward" size={20} color={textSecondary} />
           </Pressable>
           <View style={[styles.itemSeparator, { backgroundColor: outline }]} />
           <Pressable style={styles.item}>
@@ -169,7 +169,7 @@ export default function MenuScreen() {
               Excluir meus dados
             </AppText>
             <View style={{ flex: 1 }} />
-            <IconSymbol name="chevron.forward" size={20} color={textPrimary} />
+            <IconSymbol name="chevron.forward" size={20} color={textSecondary} />
           </Pressable>
         </ScrollView>
       </View>
