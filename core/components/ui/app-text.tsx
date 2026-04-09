@@ -1,5 +1,5 @@
 import React from "react";
-import { ColorValue, Text, TextProps } from "react-native";
+import { ColorValue, Text, TextProps, TextStyle } from "react-native";
 
 interface AppTextProps extends TextProps {
   children?: string;
@@ -7,6 +7,7 @@ interface AppTextProps extends TextProps {
   fontSize?: "xs" | "sm" | "md" | "lg" | "xl" | "2xl";
   bold?: boolean;
   fontColor?: ColorValue;
+  alignment?: TextStyle["textAlign"];
 }
 
 export function AppText({
@@ -15,6 +16,7 @@ export function AppText({
   fontColor = "#000000",
   fontSize = "md",
   bold = false,
+  alignment = "auto",
   ...rest
 }: AppTextProps) {
   const getStyle = () => {
@@ -48,7 +50,8 @@ export function AppText({
         {
           fontFamily: getStyle(),
           fontSize: getFontSizeSize(),
-          color: fontColor
+          color: fontColor,
+          textAlign: alignment,
         },
       ]}
       {...rest}

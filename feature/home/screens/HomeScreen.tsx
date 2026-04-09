@@ -1,39 +1,21 @@
 import { MainLayout } from "@/core/components/layout/MainLayout";
+import { AppText } from "@/core/components/ui/app-text";
 import AppTopBar from "@/core/components/ui/app-top-bar";
+import { useThemeColor } from "@/core/hooks/use-theme-color";
 import { HomeSection } from "@/feature/home/components/HomeSection";
-import { NavigationProp, useNavigation } from "@react-navigation/native";
-import { useAssets } from "expo-asset";
-import React from "react";
-import { Image, StyleSheet, useColorScheme, View } from "react-native";
-import { RootTabParamList } from "../../../navigation/Navigator";
 import { useHome } from "@/feature/home/hooks/useHome";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
+import React from "react";
+import { StyleSheet, useColorScheme, View } from "react-native";
+import { RootTabParamList } from "../../../navigation/Navigator";
 
 export default function HomeScreen() {
   const colorScheme = useColorScheme();
   const isDarkTheme = colorScheme === "dark";
   const navigation = useNavigation<NavigationProp<RootTabParamList>>();
-
-  const [assets, error] = useAssets([
-      require("@/assets/images/home-logo.png"),
-      require("@/assets/images/home-logo-dark.png"),
-    ]);
-  
+  const textPrimary = useThemeColor({}, "text");
 
   const { todayMealsList } = useHome();
-
-  const renderAsset = () => {
-    if (assets && assets.length > 0) {
-      if (isDarkTheme) {
-        return <Image source={{ uri: assets[1].uri }} style={styles.headerImage} />;
-      } else {
-        return (
-          <Image source={{ uri: assets[0].uri }} style={styles.headerImage} />
-        );
-      }
-    }
-
-    return null;
-  };
 
   return (
     <MainLayout>
@@ -43,7 +25,11 @@ export default function HomeScreen() {
             iconName: "magnifyingglass",
             action: () => {},
           }}
-          center={renderAsset()}
+          center={
+            <AppText fontFamily="display" fontSize="md" fontColor={textPrimary}>
+              Piggy Journal
+            </AppText>
+          }
           trailing={{
             iconName: "plus",
             actionType: "primary",

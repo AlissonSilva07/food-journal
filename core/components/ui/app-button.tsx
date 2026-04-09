@@ -102,8 +102,7 @@ export function AppButton({
 const styles = StyleSheet.create({
   container: {
     width: "100%",
-    paddingVertical: 8,
-    paddingHorizontal: 16,
+    padding: 16,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",

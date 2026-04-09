@@ -1,4 +1,8 @@
 import { AppTabBar } from "@/core/components/ui/app-tabbar";
+import OnboardingIndexScreen from "@/feature/onboarding/screens/OnboardingIndexScreen";
+import OnboardingUserDataScreen, {
+  default as OnboardingScreen,
+} from "@/feature/onboarding/screens/OnboardingUserDataScreen";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import {
   createStaticNavigation,
@@ -10,6 +14,25 @@ import HomeScreen from "../feature/home/screens/HomeScreen";
 import MealDetailsScreen from "../feature/home/screens/MealDetailsScreen";
 import NewMealScreen from "../feature/home/screens/NewMealScreen";
 import MenuScreen from "../feature/menu/screen/MenuScreen";
+
+export const OnboardingStack = createNativeStackNavigator({
+  screens: {
+    Index: {
+      screen: OnboardingIndexScreen,
+      options: {
+        title: "Index",
+        headerShown: false,
+      },
+    },
+    UserData: {
+      screen: OnboardingUserDataScreen,
+      options: {
+        title: "UserData",
+        headerShown: false,
+      },
+    },
+  },
+});
 
 export const HomeStack = createNativeStackNavigator({
   screens: {
@@ -44,7 +67,7 @@ export const HomeStack = createNativeStackNavigator({
   },
 });
 
-export const RootStack = createBottomTabNavigator({
+export const Tabs = createBottomTabNavigator({
   tabBar: (props) => <AppTabBar {...props} />,
   screenOptions: {
     tabBarStyle: {
@@ -76,9 +99,27 @@ export const RootStack = createBottomTabNavigator({
   },
 });
 
+export const RootStack = createNativeStackNavigator({
+  screens: {
+    Onboarding: {
+      screen: OnboardingStack,
+      options: { headerShown: false },
+    },
+    Main: {
+      screen: Tabs,
+      options: { headerShown: false },
+    },
+  },
+});
+
 export const Navigation = createStaticNavigation(RootStack);
 
 export type RootStackType = typeof RootStack;
+
+export type OnboardingStackParamList = {
+  Index: undefined;
+  UserData: undefined;
+};
 
 export type HomeStackParamList = {
   Index: undefined;
