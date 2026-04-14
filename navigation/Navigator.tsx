@@ -13,7 +13,7 @@ import GalleryScreen from "../feature/gallery/screens/GalleryScreen";
 import HomeScreen from "../feature/home/screens/HomeScreen";
 import MealDetailsScreen from "../feature/home/screens/MealDetailsScreen";
 import NewMealScreen from "../feature/home/screens/NewMealScreen";
-import MenuScreen from "../feature/menu/screen/MenuScreen";
+import MenuScreen from "../feature/menu/screens/MenuScreen";
 
 export const InitStack = createNativeStackNavigator({
   screens: {

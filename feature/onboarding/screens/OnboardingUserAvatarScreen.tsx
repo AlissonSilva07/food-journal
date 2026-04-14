@@ -24,10 +24,7 @@ import {
   useColorScheme,
   View,
 } from "react-native";
-import {
-  OnboardingStackParamList,
-  RootTabParamList,
-} from "../../../navigation/Navigator";
+import { OnboardingStackParamList } from "../../../navigation/Navigator";
 
 export default function OnboardingUserAvatarScreen() {
   const colorScheme = useColorScheme();
@@ -78,7 +75,7 @@ export default function OnboardingUserAvatarScreen() {
 
   const setUserAndGoToApp = async () => {
     console.log(name, image);
-    
+
     const result = await setUser({
       name,
       avatar: image,
@@ -90,7 +87,7 @@ export default function OnboardingUserAvatarScreen() {
         screen: "Home",
       });
       showToast({
-        message: "Usuário(a) com sucesso!",
+        message: "Usuário(a) salvo com sucesso!",
         type: "success",
       });
     } else {
@@ -207,11 +204,7 @@ export default function OnboardingUserAvatarScreen() {
               <AppButton
                 title="Continuar sem avatar"
                 variant="muted"
-                onPress={() =>
-                  navigation.navigate("Main", {
-                    screen: "Home",
-                  })
-                }
+                onPress={setUserAndGoToApp}
               />
             </View>
           )}

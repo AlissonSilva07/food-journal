@@ -1,11 +1,12 @@
 import { MainLayout } from "@/core/components/layout/MainLayout";
+import { AppAlert } from "@/core/components/ui/app-alert";
 import { AppText } from "@/core/components/ui/app-text";
 import AppTopBar from "@/core/components/ui/app-top-bar";
 import { IconSymbol } from "@/core/components/ui/icon-symbol";
 import { useThemeColor } from "@/core/hooks/use-theme-color";
 import { useUserStore } from "@/core/store/user.store";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { Paths } from "expo-file-system/next";
-import { useNavigation } from "expo-router";
 import React from "react";
 import {
   ActivityIndicator,
@@ -15,9 +16,10 @@ import {
   View,
 } from "react-native";
 import { MenuItem } from "../components/MenuItem";
+import { useMenu } from "../hooks/useMenu";
 
 export default function MenuScreen() {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<any>>();
   const textPrimary = useThemeColor({}, "text");
   const textSecondary = useThemeColor({}, "textSecondary");
   const surface = useThemeColor({}, "surface");
@@ -26,6 +28,7 @@ export default function MenuScreen() {
   const outline = useThemeColor({}, "outline");
 
   const { isLoading, user } = useUserStore();
+  const { dialog, handleEraseData } = useMenu();
 
   const formattedDate = new Date(user?.createdAt!).toLocaleDateString();
 
@@ -96,10 +99,16 @@ export default function MenuScreen() {
               {renderAvatar()}
             </View>
             <View style={styles.headerText}>
-              <AppText fontSize="xl" fontColor={textPrimary} bold>
-                {user?.name}
-              </AppText>
-              {formattedDate && (
+              {user?.name ? (
+                <AppText fontSize="xl" fontColor={textPrimary} bold>
+                  {user.name}
+                </AppText>
+              ) : (
+                <AppText fontSize="xl" fontColor={textPrimary} bold>
+                  Usuário(a)
+                </AppText>
+              )}
+              {user?.createdAt && formattedDate && (
                 <AppText fontSize="sm" fontColor={textSecondary}>
                   PiggyJourner desde {formattedDate}
                 </AppText>
@@ -125,7 +134,7 @@ export default function MenuScreen() {
           <MenuItem
             title="Excluir meus dados"
             icon="trash"
-            onPress={() => {}}
+            onPress={() => dialog.setValue(true)}
           />
           <View style={styles.spacer} />
           <View style={styles.bottomText}>
@@ -135,6 +144,36 @@ export default function MenuScreen() {
           </View>
         </ScrollView>
       </View>
+
+      <AppAlert
+        title="Atenção"
+        visible={dialog.value}
+        onClose={() => dialog.setValue(false)}
+        positiveButton={{
+          title: "Sim",
+          action: () =>
+            handleEraseData(() =>
+              navigation.reset({
+                index: 0,
+                routes: [
+                  {
+                    name: "Onboarding",
+                  },
+                ],
+              }),
+            ),
+        }}
+        negativeButton={{
+          title: "Não",
+          action: () => {
+            dialog.setValue(false);
+          },
+        }}
+      >
+        <AppText fontColor={textPrimary}>
+          Deseja realmente apagar os seus dados? Esta ação é irreversível.
+        </AppText>
+      </AppAlert>
     </MainLayout>
   );
 }
@@ -159,6 +198,8 @@ const styles = StyleSheet.create({
     width: 64,
     height: 64,
     borderRadius: 100,
+    alignItems: "center",
+    justifyContent: "center",
   },
   topImageRing: {
     width: 76,

@@ -21,6 +21,7 @@ interface MealStore {
   fetchTodayMeals: () => Promise<void>;
   fetchMealById: (id: number) => Promise<MealWithIngredients | undefined>;
   deleteMeal: (id: number) => Promise<void>;
+  deleteAllMeals: () => Promise<void>;
 }
 
 export const useMealStore = create<MealStore>((set, get) => ({
@@ -151,6 +152,33 @@ export const useMealStore = create<MealStore>((set, get) => ({
       }));
     } catch (error) {
       console.error("Error deleting meal:", error);
+    }
+  },
+
+  deleteAllMeals: async () => {
+    set({ isLoading: true });
+    try {
+      const allMeals = await db.query.meals.findMany();
+
+      await db.delete(meals);
+
+      for (const meal of allMeals) {
+        if (meal.imageUri) {
+          const file = new File(Paths.document, meal.imageUri);
+          if (file.exists) {
+            file.delete();
+          }
+        }
+      }
+
+      set({
+        mealsList: [],
+        todayMealsList: [],
+        isLoading: false,
+      });
+    } catch (error) {
+      console.error("Error deleting all meals:", error);
+      set({ isLoading: false });
     }
   },
 }));

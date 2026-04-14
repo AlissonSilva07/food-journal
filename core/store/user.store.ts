@@ -45,43 +45,39 @@ export const useUserStore = create<UserStore>((set, get) => ({
     }
   },
 
-  setUser: async (user) => {
+  setUser: async (userData) => {
     set({ isLoading: true });
-
     try {
+      const currentUser = get().user;
       let finalImageUri: string | null = null;
 
-      if (user.avatar) {
-        const extension = user.avatar.split(".").pop() || "jpg";
-        const fileName = `user_${Date.now()}_${Math.floor(Math.random() * 1000)}.${extension}`;
-
-        const sourceFile = new File(user.avatar);
+      if (userData.avatar) {
+        const extension = userData.avatar.split(".").pop() || "jpg";
+        const fileName = `user_${Date.now()}.${extension}`;
+        const sourceFile = new File(userData.avatar);
         const destinationFile = new File(Paths.document, fileName);
-
         await sourceFile.copy(destinationFile);
-
-        if (!destinationFile.exists) {
-          throw new Error("File copy failed");
-        }
-
         finalImageUri = fileName;
+
+        if (currentUser?.avatar) {
+          const oldFile = new File(Paths.document, currentUser.avatar);
+          if (oldFile.exists) oldFile.delete();
+        }
       }
 
-      await db.delete(userTable);
-
-      await db.insert(userTable).values({
-        name: user.name,
-        avatar: finalImageUri,
+      await db.transaction(async (tx) => {
+        await tx.delete(userTable);
+        await tx.insert(userTable).values({
+          name: userData.name,
+          avatar: finalImageUri,
+        });
       });
 
       const savedUser = await db.query.user.findFirst();
-
-      set({ user: savedUser ?? null });
-
+      set({ user: savedUser ?? null, hasOnboarded: !!savedUser });
       return { success: true };
     } catch (error) {
-      console.error("Erro ao salvar usuário.:", error);
-      return { success: false, error: "Falha ao salvar usuário." };
+      return { success: false, error: "Error updating profile." };
     } finally {
       set({ isLoading: false });
     }
