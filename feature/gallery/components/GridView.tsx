@@ -1,4 +1,5 @@
 import { AppText } from "@/core/components/ui/app-text";
+import { EmptyState } from "@/core/components/ui/empty-state";
 import { MealWithIngredients } from "@/core/db/schema";
 import { useThemeColor } from "@/core/hooks/use-theme-color";
 import { RootTabParamList } from "@/navigation/Navigator";
@@ -116,26 +117,16 @@ export function GridView({ mealsHistory, selectedMeal }: GridViewProps) {
         <AppText fontFamily="display" fontSize="2xl" fontColor={textPrimary}>
           Galeria
         </AppText>
-        <View style={styles.emptyContent}>
-          {renderAsset()}
-          <AppText fontFamily="display" fontSize="xl" fontColor={textPrimary}>
-            Está vazio por aqui...
-          </AppText>
-          <AppText fontFamily="body" fontSize="md" fontColor={textSecondary}>
-            Experimente adicionar uma refeição
-          </AppText>
-          <Pressable
-            onPress={() =>
-              navigation.navigate("Home", {
-                screen: "New",
-              })
-            }
-          >
-            <AppText fontFamily="body" fontSize="md" bold fontColor={primary}>
-              Adicionar
-            </AppText>
-          </Pressable>
-        </View>
+        <EmptyState
+          title="Nada por aqui"
+          subtitle="Experimente adicionar refeições"
+          callback={() =>
+            navigation.navigate("Home", {
+              screen: "New",
+            })
+          }
+          image={renderAsset()}
+        />
       </View>
     );
   }
@@ -182,8 +173,7 @@ const styles = StyleSheet.create({
     flex: 1,
     resizeMode: "cover",
   },
-  item: {
-  },
+  item: {},
   titlePadding: {
     paddingHorizontal: 16,
     paddingBottom: 16,

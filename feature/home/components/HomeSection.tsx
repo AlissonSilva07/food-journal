@@ -1,3 +1,4 @@
+import { EmptyState } from "@/core/components/ui/empty-state";
 import { MealWithIngredients } from "@/core/db/schema";
 import { useThemeColor } from "@/core/hooks/use-theme-color";
 import { RootTabParamList } from "@/navigation/Navigator";
@@ -124,26 +125,16 @@ export function HomeSection({ title, meals }: HomeSectionProps) {
         <AppText fontFamily="display" fontSize="2xl" fontColor={textPrimary}>
           {title}
         </AppText>
-        <View style={styles.emptyContent}>
-          {renderAsset()}
-          <AppText fontFamily="display" fontSize="xl" fontColor={textPrimary}>
-            Está vazio por aqui...
-          </AppText>
-          <AppText fontFamily="body" fontSize="md" fontColor={textSecondary}>
-            Experimente adicionar uma refeição
-          </AppText>
-          <Pressable
-            onPress={() =>
-              navigation.navigate("Home", {
-                screen: "New",
-              })
-            }
-          >
-            <AppText fontFamily="body" fontSize="md" bold fontColor={primary}>
-              Adicionar
-            </AppText>
-          </Pressable>
-        </View>
+        <EmptyState
+          title="Nenhuma refeição ainda"
+          subtitle="Experimente adicionar uma"
+          callback={() =>
+            navigation.navigate("Home", {
+              screen: "New",
+            })
+          }
+          image={renderAsset()}
+        />
       </View>
     );
   }
@@ -300,13 +291,6 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     gap: 4,
     paddingHorizontal: 16,
-  },
-  emptyContent: {
-    flex: 1,
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: 8,
   },
   emptyImage: {
     width: 88,

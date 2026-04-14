@@ -10,11 +10,11 @@ import React from "react";
 import {
   ActivityIndicator,
   Image,
-  Pressable,
   ScrollView,
   StyleSheet,
   View,
 } from "react-native";
+import { MenuItem } from "../components/MenuItem";
 
 export default function MenuScreen() {
   const navigation = useNavigation();
@@ -110,67 +110,29 @@ export default function MenuScreen() {
           <AppText fontSize="sm" fontColor={textSecondary} bold>
             AÇÕES
           </AppText>
-          <Pressable style={styles.item}>
-            <View
-              style={[
-                styles.iconBg,
-                {
-                  backgroundColor: surface,
-                },
-              ]}
-            >
-              <IconSymbol
-                name="person.crop.circle.fill"
-                size={20}
-                color={textPrimary}
-              />
-            </View>
-            <AppText fontSize="md" fontColor={textPrimary} bold>
-              Editar meu perfil
-            </AppText>
-            <View style={{ flex: 1 }} />
-            <IconSymbol name="chevron.forward" size={20} color={textSecondary} />
-          </Pressable>
+          <MenuItem
+            title="Editar meu perfil"
+            icon="person.crop.circle.fill"
+            onPress={() => {}}
+          />
           <View style={[styles.itemSeparator, { backgroundColor: outline }]} />
-          <Pressable style={styles.item}>
-            <View
-              style={[
-                styles.iconBg,
-                {
-                  backgroundColor: surface,
-                },
-              ]}
-            >
-              <IconSymbol
-                name="iphone.gen3.motion"
-                size={20}
-                color={textPrimary}
-              />
-            </View>
-            <AppText fontSize="md" fontColor={textPrimary} bold>
-              Rever o tutorial
-            </AppText>
-            <View style={{ flex: 1 }} />
-            <IconSymbol name="chevron.forward" size={20} color={textSecondary} />
-          </Pressable>
+          <MenuItem
+            title="Rever o tutorial"
+            icon="iphone.gen3.motion"
+            onPress={() => {}}
+          />
           <View style={[styles.itemSeparator, { backgroundColor: outline }]} />
-          <Pressable style={styles.item}>
-            <View
-              style={[
-                styles.iconBg,
-                {
-                  backgroundColor: surface,
-                },
-              ]}
-            >
-              <IconSymbol name="trash" size={20} color={textPrimary} />
-            </View>
-            <AppText fontSize="md" fontColor={textPrimary} bold>
-              Excluir meus dados
+          <MenuItem
+            title="Excluir meus dados"
+            icon="trash"
+            onPress={() => {}}
+          />
+          <View style={styles.spacer} />
+          <View style={styles.bottomText}>
+            <AppText fontSize="xs" fontColor={textSecondary}>
+              Desenvolvido com ❤️ por @AlissonSilva07
             </AppText>
-            <View style={{ flex: 1 }} />
-            <IconSymbol name="chevron.forward" size={20} color={textSecondary} />
-          </Pressable>
+          </View>
         </ScrollView>
       </View>
     </MainLayout>
@@ -216,20 +178,13 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     gap: 2,
   },
-  item: {
-    width: "100%",
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 16,
-  },
-  iconBg: {
-    padding: 8,
-    borderRadius: 100,
-    alignItems: "center",
-    justifyContent: "center",
-  },
   itemSeparator: {
     width: "100%",
-    height: 1,
+    height: 0.5,
+  },
+  bottomText: {
+    width: "100%",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
